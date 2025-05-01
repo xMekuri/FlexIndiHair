@@ -1,0 +1,227 @@
+import { pgTable, text, serial, integer, boolean, timestamp, decimal, json } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { z } from "zod";
+import { relations } from "drizzle-orm";
+
+// User authentication tables
+export const admins = pgTable("admins", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  name: text("name").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const customers = pgTable("customers", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  phone: text("phone"),
+  address: text("address"),
+  city: text("city"),
+  state: text("state"),
+  zipCode: text("zip_code"),
+  country: text("country"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Product-related tables
+export const categories = pgTable("categories", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  description: text("description"),
+  imageUrl: text("image_url"),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const products = pgTable("products", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  description: text("description").notNull(),
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  compareAtPrice: decimal("compare_at_price", { precision: 10, scale: 2 }),
+  sku: text("sku").notNull(),
+  stock: integer("stock").notNull(),
+  mainImageUrl: text("main_image_url").notNull(),
+  categoryId: integer("category_id").references(() => categories.id).notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  isFeatured: boolean("is_featured").default(false).notNull(),
+  isNew: boolean("is_new").default(false).notNull(),
+  isOnSale: boolean("is_on_sale").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const productImages = pgTable("product_images", {
+  id: serial("id").primaryKey(),
+  productId: integer("product_id").references(() => products.id).notNull(),
+  imageUrl: text("image_url").notNull(),
+  sortOrder: integer("sort_order").default(0).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const productReviews = pgTable("product_reviews", {
+  id: serial("id").primaryKey(),
+  productId: integer("product_id").references(() => products.id).notNull(),
+  customerId: integer("customer_id").references(() => customers.id).notNull(),
+  rating: integer("rating").notNull(),
+  comment: text("comment"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Order-related tables
+export const orders = pgTable("orders", {
+  id: serial("id").primaryKey(),
+  customerId: integer("customer_id").references(() => customers.id),
+  status: text("status").notNull().default("pending"), // pending, processing, shipped, delivered, cancelled
+  total: decimal("total", { precision: 10, scale: 2 }).notNull(),
+  subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
+  tax: decimal("tax", { precision: 10, scale: 2 }).notNull(),
+  shipping: decimal("shipping", { precision: 10, scale: 2 }).notNull(),
+  shippingAddress: json("shipping_address").notNull(),
+  billingAddress: json("billing_address").notNull(),
+  paymentMethod: text("payment_method").notNull(),
+  paymentStatus: text("payment_status").notNull().default("pending"), // pending, paid, failed
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const orderItems = pgTable("order_items", {
+  id: serial("id").primaryKey(),
+  orderId: integer("order_id").references(() => orders.id).notNull(),
+  productId: integer("product_id").references(() => products.id).notNull(),
+  quantity: integer("quantity").notNull(),
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  totalPrice: decimal("total_price", { precision: 10, scale: 2 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Define relations
+export const productsRelations = relations(products, ({ one, many }) => ({
+  category: one(categories, {
+    fields: [products.categoryId],
+    references: [categories.id],
+  }),
+  productImages: many(productImages),
+  productReviews: many(productReviews),
+  orderItems: many(orderItems),
+}));
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  products: many(products),
+}));
+
+export const customersRelations = relations(customers, ({ many }) => ({
+  orders: many(orders),
+  productReviews: many(productReviews),
+}));
+
+export const ordersRelations = relations(orders, ({ one, many }) => ({
+  customer: one(customers, {
+    fields: [orders.customerId],
+    references: [customers.id],
+  }),
+  orderItems: many(orderItems),
+}));
+
+export const orderItemsRelations = relations(orderItems, ({ one }) => ({
+  order: one(orders, {
+    fields: [orderItems.orderId],
+    references: [orders.id],
+  }),
+  product: one(products, {
+    fields: [orderItems.productId],
+    references: [products.id],
+  }),
+}));
+
+export const productImagesRelations = relations(productImages, ({ one }) => ({
+  product: one(products, {
+    fields: [productImages.productId],
+    references: [products.id],
+  }),
+}));
+
+export const productReviewsRelations = relations(productReviews, ({ one }) => ({
+  product: one(products, {
+    fields: [productReviews.productId],
+    references: [products.id],
+  }),
+  customer: one(customers, {
+    fields: [productReviews.customerId],
+    references: [customers.id],
+  }),
+}));
+
+// Validation schemas
+export const adminInsertSchema = createInsertSchema(admins, {
+  email: (schema) => schema.email("Please enter a valid email address"),
+  password: (schema) => schema.min(6, "Password must be at least 6 characters long"),
+  name: (schema) => schema.min(2, "Name must be at least 2 characters long"),
+});
+
+export const customerInsertSchema = createInsertSchema(customers, {
+  email: (schema) => schema.email("Please enter a valid email address"),
+  password: (schema) => schema.min(6, "Password must be at least 6 characters long"),
+  firstName: (schema) => schema.min(2, "First name must be at least 2 characters long"),
+  lastName: (schema) => schema.min(2, "Last name must be at least 2 characters long"),
+});
+
+export const categoryInsertSchema = createInsertSchema(categories, {
+  name: (schema) => schema.min(2, "Category name must be at least 2 characters long"),
+  slug: (schema) => schema.min(2, "Slug must be at least 2 characters long"),
+});
+
+export const productInsertSchema = createInsertSchema(products, {
+  name: (schema) => schema.min(2, "Product name must be at least 2 characters long"),
+  slug: (schema) => schema.min(2, "Slug must be at least 2 characters long"),
+  description: (schema) => schema.min(10, "Description must be at least 10 characters long"),
+  price: (schema) => schema.refine((val) => parseFloat(String(val)) > 0, { message: "Price must be positive" }),
+  stock: (schema) => schema.refine((val) => parseInt(String(val)) >= 0, { message: "Stock cannot be negative" }),
+});
+
+export const productImageInsertSchema = createInsertSchema(productImages);
+export const productReviewInsertSchema = createInsertSchema(productReviews);
+export const orderInsertSchema = createInsertSchema(orders);
+export const orderItemInsertSchema = createInsertSchema(orderItems);
+
+export const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+});
+
+// Type definitions for easier usage
+export type Admin = typeof admins.$inferSelect;
+export type AdminInsert = z.infer<typeof adminInsertSchema>;
+
+export type Customer = typeof customers.$inferSelect;
+export type CustomerInsert = z.infer<typeof customerInsertSchema>;
+
+export type Category = typeof categories.$inferSelect;
+export type CategoryInsert = z.infer<typeof categoryInsertSchema>;
+
+export type Product = typeof products.$inferSelect;
+export type ProductInsert = z.infer<typeof productInsertSchema>;
+
+export type ProductImage = typeof productImages.$inferSelect;
+export type ProductImageInsert = z.infer<typeof productImageInsertSchema>;
+
+export type ProductReview = typeof productReviews.$inferSelect;
+export type ProductReviewInsert = z.infer<typeof productReviewInsertSchema>;
+
+export type Order = typeof orders.$inferSelect;
+export type OrderInsert = z.infer<typeof orderInsertSchema>;
+
+export type OrderItem = typeof orderItems.$inferSelect;
+export type OrderItemInsert = z.infer<typeof orderItemInsertSchema>;
+
+export type Login = z.infer<typeof loginSchema>;
