@@ -94,53 +94,43 @@ export default function Header() {
             <li className="nav-item relative group">
               <Link href="/" className="font-medium hover:text-primary transition py-2">Home</Link>
             </li>
-            <li className="nav-item relative group">
+            <li className="relative group">
               <Link href="/products" className="font-medium hover:text-primary transition py-2 flex items-center">
                 Shop <ChevronDown className="ml-1 w-4 h-4" />
               </Link>
-              <div className="mega-menu">
-                <div className="py-6">
-                  <div className="container mx-auto px-4">
-                    <div className="grid grid-cols-4 gap-6">
-                      <div>
-                        <h3 className="font-playfair font-semibold text-lg mb-4">Hair Extensions</h3>
-                        <ul className="space-y-2">
-                          <li><Link href="/products?category=clip-in-extensions" className="hover:text-primary transition">Clip-In Extensions</Link></li>
-                          <li><Link href="/products?category=tape-in-extensions" className="hover:text-primary transition">Tape-In Extensions</Link></li>
-                          <li><Link href="/products?category=halo-extensions" className="hover:text-primary transition">Halo Extensions</Link></li>
-                          <li><Link href="/products?category=nano-ring-extensions" className="hover:text-primary transition">Nano Ring Extensions</Link></li>
-                          <li><Link href="/products?category=weft-extensions" className="hover:text-primary transition">Weft Extensions</Link></li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="font-playfair font-semibold text-lg mb-4">By Hair Type</h3>
-                        <ul className="space-y-2">
-                          <li><Link href="/products?type=straight" className="hover:text-primary transition">Straight Hair</Link></li>
-                          <li><Link href="/products?type=wavy" className="hover:text-primary transition">Wavy Hair</Link></li>
-                          <li><Link href="/products?type=curly" className="hover:text-primary transition">Curly Hair</Link></li>
-                          <li><Link href="/products?type=colored" className="hover:text-primary transition">Colored Hair</Link></li>
-                          <li><Link href="/products?type=ombre" className="hover:text-primary transition">Ombre Hair</Link></li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="font-playfair font-semibold text-lg mb-4">Hair Care</h3>
-                        <ul className="space-y-2">
-                          <li><Link href="/products?category=shampoo-conditioner" className="hover:text-primary transition">Shampoo & Conditioner</Link></li>
-                          <li><Link href="/products?category=hair-masks" className="hover:text-primary transition">Hair Masks</Link></li>
-                          <li><Link href="/products?category=hair-brushes" className="hover:text-primary transition">Hair Brushes</Link></li>
-                          <li><Link href="/products?category=styling-products" className="hover:text-primary transition">Styling Products</Link></li>
-                          <li><Link href="/products?category=hair-treatments" className="hover:text-primary transition">Hair Treatments</Link></li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="font-playfair font-semibold text-lg mb-4">Featured Product</h3>
-                        <Link href="/product/tape-in-gold-series">
-                          <div className="rounded-md w-full h-40 bg-[url('https://images.unsplash.com/photo-1590329946928-f9b7593d8a76?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGhhaXIlMjBleHRlbnNpb25zfGVufDB8fDB8fHww')] bg-cover bg-center rounded-md"></div>
-                          <p className="mt-2 font-medium">Premium Russian Tape-Ins</p>
-                          <p className="text-primary font-semibold">$199.99</p>
-                        </Link>
-                      </div>
-                    </div>
+              <div className="absolute left-0 top-full bg-white shadow-lg z-50 hidden group-hover:block w-64">
+                <div className="p-4">
+                  <h3 className="font-semibold mb-2">Hair Extensions</h3>
+                  <ul className="space-y-2">
+                    <li><Link href="/products?category=clip-in-extensions" className="block hover:text-primary transition">Clip-In Extensions</Link></li>
+                    <li><Link href="/products?category=tape-in-extensions" className="block hover:text-primary transition">Tape-In Extensions</Link></li>
+                    <li><Link href="/products?category=halo-extensions" className="block hover:text-primary transition">Halo Extensions</Link></li>
+                    <li><Link href="/products?category=nano-ring-extensions" className="block hover:text-primary transition">Nano Ring Extensions</Link></li>
+                    <li><Link href="/products?category=weft-extensions" className="block hover:text-primary transition">Weft Extensions</Link></li>
+                  </ul>
+                  
+                  <h3 className="font-semibold mt-4 mb-2">By Hair Type</h3>
+                  <ul className="space-y-2">
+                    <li><Link href="/products?type=straight" className="block hover:text-primary transition">Straight Hair</Link></li>
+                    <li><Link href="/products?type=wavy" className="block hover:text-primary transition">Wavy Hair</Link></li>
+                    <li><Link href="/products?type=curly" className="block hover:text-primary transition">Curly Hair</Link></li>
+                    <li><Link href="/products?type=colored" className="block hover:text-primary transition">Colored Hair</Link></li>
+                    <li><Link href="/products?type=ombre" className="block hover:text-primary transition">Ombre Hair</Link></li>
+                  </ul>
+                  
+                  <h3 className="font-semibold mt-4 mb-2">Hair Care</h3>
+                  <ul className="space-y-2">
+                    <li><Link href="/products?category=shampoo-conditioner" className="block hover:text-primary transition">Shampoo & Conditioner</Link></li>
+                    <li><Link href="/products?category=hair-masks" className="block hover:text-primary transition">Hair Masks</Link></li>
+                    <li><Link href="/products?category=hair-brushes" className="block hover:text-primary transition">Hair Brushes</Link></li>
+                    <li><Link href="/products?category=styling-products" className="block hover:text-primary transition">Styling Products</Link></li>
+                    <li><Link href="/products?category=hair-treatments" className="block hover:text-primary transition">Hair Treatments</Link></li>
+                  </ul>
+                  
+                  <div className="pt-3 mt-4 border-t">
+                    <Link href="/products" className="block py-2 text-center bg-primary text-white rounded-md hover:bg-opacity-90 transition">
+                      View All Products
+                    </Link>
                   </div>
                 </div>
               </div>
