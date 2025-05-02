@@ -93,28 +93,20 @@
     font-family: 'Montserrat', sans-serif;
   }
 
+  /* Mega menu styling */
   .mega-menu {
     display: none;
     position: absolute;
     width: 100%;
     left: 0;
     top: 100%;
-    background: white;
+    background-color: white;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     z-index: 50;
-    padding: 1.5rem 0;
   }
     
   .nav-item:hover .mega-menu {
     display: block;
-  }
-  
-  .shop-menu-item {
-    @apply inline-flex items-center justify-center;
-  }
-  
-  .shop-menu-item > * {
-    @apply inline-flex items-center;
   }
 
   .slide-in {
