@@ -23,6 +23,7 @@ export default function Header() {
   const [location] = useLocation();
   const isMobile = useMobile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileSubmenus, setMobileSubmenus] = useState<Record<string, boolean>>({});
   const { itemCount } = useCart();
   const { isCustomerLoggedIn, isAdminLoggedIn, customer, logout } = useAuth();
@@ -36,6 +37,7 @@ export default function Header() {
   // Close mobile menu when navigating
   useEffect(() => {
     setMobileMenuOpen(false);
+    setUserMenuOpen(false);
   }, [location]);
 
   const toggleMobileSubmenu = (menuId: string) => {
@@ -148,11 +150,15 @@ export default function Header() {
           <a href="#" className="hover:text-primary transition">
             <Search className="w-5 h-5" />
           </a>
-          <div className="relative group">
-            <div className="hover:text-primary transition cursor-pointer">
+          <div className="relative">
+            <button 
+              onClick={() => setUserMenuOpen(!userMenuOpen)}
+              className="hover:text-primary transition cursor-pointer"
+              aria-label="Toggle user menu"
+            >
               <User className="w-5 h-5" />
-            </div>
-            <div className="hidden group-hover:block absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-40 p-4">
+            </button>
+            <div className={`${userMenuOpen ? 'block' : 'hidden'} absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-40 p-4`}>
               {isCustomerLoggedIn ? (
                 <>
                   <p className="text-sm font-medium mb-3">Hi, {customer?.firstName}!</p>
