@@ -157,9 +157,9 @@ export default function Header() {
             <Search className="w-5 h-5" />
           </a>
           <div className="relative group">
-            <a href="#" className="hover:text-primary transition">
+            <div className="hover:text-primary transition cursor-pointer">
               <User className="w-5 h-5" />
-            </a>
+            </div>
             <div className="hidden group-hover:block absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-40 p-4">
               {isCustomerLoggedIn ? (
                 <>
@@ -181,13 +181,11 @@ export default function Header() {
                 </>
               )}
               
-              {isAdminLoggedIn && (
-                <div className="mt-3 pt-3 border-t">
-                  <Link href="/admin" className="block w-full text-center bg-secondary text-white py-2 rounded-md hover:bg-opacity-90 transition">
-                    Admin Panel
-                  </Link>
-                </div>
-              )}
+              <div className="mt-3 pt-3 border-t">
+                <Link href="/admin/login" className="block w-full text-center bg-secondary text-white py-2 rounded-md hover:bg-opacity-90 transition">
+                  Admin Login
+                </Link>
+              </div>
             </div>
           </div>
           <Link href="/cart" className="hover:text-primary transition relative">
@@ -261,6 +259,10 @@ export default function Header() {
             
             <Link href="/cart" className="block py-2 font-medium">
               <ShoppingBag className="w-4 h-4 inline-block mr-2" /> My Cart ({itemCount})
+            </Link>
+            
+            <Link href="/admin/login" className="block py-2 font-medium text-secondary">
+              Admin Login
             </Link>
           </div>
           

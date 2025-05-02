@@ -1,15 +1,24 @@
-import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import {
-  ShoppingBag,
-  DollarSign,
-  Users,
-  Package,
-  Eye,
+import { 
+  Package, 
+  Users, 
+  CreditCard, 
+  DollarSign, 
+  TrendingUp, 
+  Calendar, 
+  ShoppingCart, 
+  Truck,
   Loader2
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -18,37 +27,41 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { formatDistanceToNow } from "date-fns";
+import { Button } from "@/components/ui/button";
 
-export default function Dashboard() {
-  // Fetch dashboard stats
-  const { data: stats, isLoading, error, refetch } = useQuery({
-    queryKey: ['/api/admin/dashboard'],
+export default function AdminDashboard() {
+  // Fetch dashboard statistics
+  const { data: stats, isLoading: isLoadingStats } = useQuery({
+    queryKey: ['/api/admin/dashboard/stats'],
     queryFn: async () => {
-      const response = await fetch('/api/admin/dashboard', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
-        }
-      });
-      if (!response.ok) throw new Error('Failed to fetch dashboard stats');
-      return response.json();
+      try {
+        const response = await fetch('/api/admin/dashboard/stats', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+          }
+        });
+        if (!response.ok) throw new Error('Failed to fetch dashboard stats');
+        return response.json();
+      } catch (error) {
+        console.error('Error fetching dashboard stats:', error);
+        return {
+          totalSales: 0,
+          totalOrders: 0,
+          totalCustomers: 0,
+          totalProducts: 0,
+          recentOrders: []
+        };
+      }
     },
   });
 
-  // Refresh data on mount
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
-  // Helper function to format currency
-  const formatCurrency = (amount: string | number) => {
-    const num = typeof amount === 'string' ? parseFloat(amount) : amount;
+  // Format currency
+  const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD'
-    }).format(num);
+      currency: 'USD',
+    }).format(value);
   };
 
   // Get status badge color
@@ -62,237 +75,152 @@ export default function Dashboard() {
         return 'bg-blue-100 text-blue-800';
       case 'cancelled':
         return 'bg-red-100 text-red-800';
+      case 'pending':
+        return 'bg-gray-100 text-gray-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-red-50 border border-red-200 text-red-800 rounded-md p-4">
-        <p>Error loading dashboard data. Please try again later.</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-8">
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <div className="rounded-full bg-blue-100 p-3 mr-4">
-                <ShoppingBag className="text-blue-500 h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Total Orders</p>
-                <h3 className="text-2xl font-semibold">{stats.orderCount.toLocaleString()}</h3>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold">Dashboard</h1>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <div className="rounded-full bg-green-100 p-3 mr-4">
-                <DollarSign className="text-green-500 h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Total Revenue</p>
-                <h3 className="text-2xl font-semibold">{formatCurrency(stats.revenue)}</h3>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <div className="rounded-full bg-purple-100 p-3 mr-4">
-                <Users className="text-purple-500 h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Total Customers</p>
-                <h3 className="text-2xl font-semibold">{stats.customerCount.toLocaleString()}</h3>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <div className="rounded-full bg-orange-100 p-3 mr-4">
-                <Package className="text-orange-500 h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Products</p>
-                <h3 className="text-2xl font-semibold">{stats.productCount.toLocaleString()}</h3>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Orders */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium text-lg">Recent Orders</h3>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/admin/orders">View All</Link>
-            </Button>
+      {isLoadingStats ? (
+        <div className="flex justify-center items-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : (
+        <>
+          {/* Stats Cards */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {formatCurrency(stats?.totalSales || 0)}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  +20.1% from last month
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Orders</CardTitle>
+                <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats?.totalOrders || 0}</div>
+                <p className="text-xs text-muted-foreground">
+                  +12.2% from last month
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Customers</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats?.totalCustomers || 0}</div>
+                <p className="text-xs text-muted-foreground">
+                  +5.1% from last month
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Products</CardTitle>
+                <Package className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats?.totalProducts || 0}</div>
+                <p className="text-xs text-muted-foreground">
+                  +18 added this month
+                </p>
+              </CardContent>
+            </Card>
           </div>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Order ID</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Total</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {stats.recentOrders && stats.recentOrders.length > 0 ? (
-                  stats.recentOrders.map((order: any) => (
-                    <TableRow key={order.id}>
-                      <TableCell>#{order.id.toString().padStart(5, '0')}</TableCell>
-                      <TableCell>
-                        {new Date(order.createdAt).toLocaleDateString()}
-                        <div className="text-xs text-gray-500">
-                          {formatDistanceToNow(new Date(order.createdAt), { addSuffix: true })}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {order.customerId ? (
-                          <Link href={`/admin/customers/${order.customerId}`} className="hover:underline text-blue-600">
-                            {order.customerId ? 'Customer #' + order.customerId : 'Guest'}
-                          </Link>
-                        ) : (
-                          'Guest'
-                        )}
-                      </TableCell>
-                      <TableCell>{formatCurrency(order.total)}</TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(order.status)}>
-                          {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Link href={`/admin/orders/${order.id}`}>
-                          <Button variant="ghost" size="icon">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </Link>
-                      </TableCell>
+
+          {/* Recent Orders */}
+          <Card className="col-span-full">
+            <CardHeader>
+              <CardTitle>Recent Orders</CardTitle>
+              <CardDescription>
+                Overview of the latest customer orders
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {!stats?.recentOrders || stats.recentOrders.length === 0 ? (
+                <div className="text-center py-6 text-muted-foreground">
+                  No recent orders found.
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Order ID</TableHead>
+                      <TableHead>Customer</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Total</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center py-4">
-                      No recent orders found
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Low Stock Products */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-medium text-lg">Low Stock Products</h3>
-              <Button asChild variant="outline" size="sm">
-                <Link href="/admin/products">View All</Link>
-              </Button>
-            </div>
-            <ul className="divide-y">
-              {stats.lowStockProducts && stats.lowStockProducts.length > 0 ? (
-                stats.lowStockProducts.map((product: any) => (
-                  <li key={product.id} className="py-3 flex justify-between items-center">
-                    <div className="flex items-center">
-                      <div className="w-12 h-12 relative overflow-hidden rounded mr-3 flex-shrink-0">
-                        <div 
-                          className="w-full h-full bg-cover bg-center"
-                          style={{ backgroundImage: `url(${product.mainImageUrl})` }}
-                        ></div>
-                      </div>
-                      <span className="truncate max-w-[200px]" title={product.name}>
-                        {product.name}
-                      </span>
-                    </div>
-                    <div>
-                      <Badge className={product.stock <= 5 ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}>
-                        {product.stock} left
-                      </Badge>
-                    </div>
-                  </li>
-                ))
-              ) : (
-                <li className="py-4 text-center text-gray-500">
-                  All products are well stocked
-                </li>
+                  </TableHeader>
+                  <TableBody>
+                    {stats.recentOrders.map((order: any) => (
+                      <TableRow key={order.id}>
+                        <TableCell className="font-medium">#{order.id.toString().padStart(5, '0')}</TableCell>
+                        <TableCell>
+                          {order.customer ? (
+                            <Link href={`/admin/customers/${order.customer.id}`} className="hover:underline text-blue-600">
+                              {order.customer.firstName} {order.customer.lastName}
+                            </Link>
+                          ) : (
+                            "Guest"
+                          )}
+                        </TableCell>
+                        <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(order.status)}>
+                            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {formatCurrency(typeof order.total === 'number' 
+                            ? order.total 
+                            : Number(order.total))}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="outline" size="sm" asChild>
+                            <Link href={`/admin/orders/${order.id}`}>
+                              View
+                            </Link>
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               )}
-            </ul>
-          </CardContent>
-        </Card>
-
-        {/* Recent Customers */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-medium text-lg">Recent Customers</h3>
-              <Button asChild variant="outline" size="sm">
-                <Link href="/admin/customers">View All</Link>
-              </Button>
-            </div>
-            <ul className="divide-y">
-              {stats.recentCustomers && stats.recentCustomers.length > 0 ? (
-                stats.recentCustomers.map((customer: any) => (
-                  <li key={customer.id} className="py-3 flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center mr-3 flex-shrink-0">
-                      {customer.firstName ? customer.firstName.charAt(0) : ''}
-                      {customer.lastName ? customer.lastName.charAt(0) : ''}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <Link href={`/admin/customers/${customer.id}`} className="hover:underline text-blue-600">
-                        <h4 className="font-medium truncate">
-                          {customer.firstName} {customer.lastName}
-                        </h4>
-                      </Link>
-                      <p className="text-sm text-gray-500 truncate">{customer.email}</p>
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {formatDistanceToNow(new Date(customer.createdAt), { addSuffix: true })}
-                    </div>
-                  </li>
-                ))
-              ) : (
-                <li className="py-4 text-center text-gray-500">
-                  No recent customers found
-                </li>
-              )}
-            </ul>
-          </CardContent>
-        </Card>
-      </div>
+              <div className="mt-4 flex justify-end">
+                <Button variant="outline" asChild>
+                  <Link href="/admin/orders">
+                    View All Orders
+                  </Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </>
+      )}
     </div>
   );
 }

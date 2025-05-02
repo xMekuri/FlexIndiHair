@@ -1,4 +1,5 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
+import { useEffect, useState } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -17,6 +18,7 @@ import Checkout from "@/pages/Checkout";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/not-found";
+import AuthPage from "@/pages/auth-page";
 
 // Admin Pages
 import AdminLogin from "@/pages/Admin/Login";
@@ -29,6 +31,45 @@ import AdminCustomers from "@/pages/Admin/Customers";
 // Context
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { Loader2 } from "lucide-react";
+
+// Simple protected route component
+const ProtectedAdminRoute = ({ component: Component }: { component: React.ComponentType }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [, setLocation] = useLocation();
+  
+  useEffect(() => {
+    // Check if admin token exists
+    const token = localStorage.getItem("admin_token");
+    
+    if (!token) {
+      setIsAuthenticated(false);
+      setLocation("/admin/login");
+    } else {
+      // Ideally, you would validate the token on the server 
+      // For simplicity, we'll just check if it exists
+      setIsAuthenticated(true);
+    }
+  }, [setLocation]);
+  
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+  
+  if (isAuthenticated === false) {
+    return null; // Redirect is handled in useEffect
+  }
+  
+  return (
+    <AdminLayout>
+      <Component />
+    </AdminLayout>
+  );
+};
 
 function Router() {
   return (
@@ -42,42 +83,29 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/contact" component={Contact} />
       
+      {/* Auth Routes */}
+      <Route path="/login" component={AuthPage} />
+      <Route path="/register" component={AuthPage} />
+      <Route path="/account" component={AuthPage} />
+      <Route path="/auth" component={AuthPage} />
+      
       {/* Admin Routes */}
       <Route path="/admin/login" component={AdminLogin} />
+      
       <Route path="/admin">
-        {() => (
-          <AdminLayout>
-            <AdminDashboard />
-          </AdminLayout>
-        )}
+        {() => <ProtectedAdminRoute component={AdminDashboard} />}
       </Route>
       <Route path="/admin/products">
-        {() => (
-          <AdminLayout>
-            <AdminProducts />
-          </AdminLayout>
-        )}
+        {() => <ProtectedAdminRoute component={AdminProducts} />}
       </Route>
       <Route path="/admin/orders">
-        {() => (
-          <AdminLayout>
-            <AdminOrders />
-          </AdminLayout>
-        )}
+        {() => <ProtectedAdminRoute component={AdminOrders} />}
       </Route>
       <Route path="/admin/categories">
-        {() => (
-          <AdminLayout>
-            <AdminCategories />
-          </AdminLayout>
-        )}
+        {() => <ProtectedAdminRoute component={AdminCategories} />}
       </Route>
       <Route path="/admin/customers">
-        {() => (
-          <AdminLayout>
-            <AdminCustomers />
-          </AdminLayout>
-        )}
+        {() => <ProtectedAdminRoute component={AdminCustomers} />}
       </Route>
       
       {/* Fallback to 404 */}
