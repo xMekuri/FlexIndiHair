@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ChevronRight, CreditCard, Slack, Truck, Check } from "lucide-react";
+import { ChevronRight, CreditCard, Slack, Truck, Check, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
@@ -184,9 +184,19 @@ export default function Checkout() {
         throw new Error('Failed to create order');
       }
       
-      // Clear cart and show success
+      // Get the created order
+      const order = await response.json();
+      
+      // Clear cart and show confirmation
       clearCart();
-      nextStep();
+      
+      if (order && order.id) {
+        // Redirect to the order confirmation page with the order ID
+        navigate(`/order-confirmation?id=${order.id}`);
+      } else {
+        // Fallback if no order ID is returned
+        nextStep();
+      }
       
     } catch (error) {
       console.error('Checkout error:', error);
