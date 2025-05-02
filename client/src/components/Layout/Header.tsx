@@ -95,11 +95,13 @@ export default function Header() {
               <Link href="/" className="font-medium hover:text-primary transition py-2">Home</Link>
             </li>
             <li className="nav-item relative group">
-              <Link href="/products" className="inline-flex items-center font-medium hover:text-primary transition py-2">
-                <span>Shop</span> <ChevronDown className="ml-1 w-4 h-4" />
-              </Link>
-              <div className="mega-menu absolute top-full left-0 w-full hidden group-hover:block bg-white shadow-lg z-40">
-                <div className="container mx-auto px-4 py-6">
+              <div className="shop-menu-item">
+                <Link href="/products" className="font-medium hover:text-primary transition py-2">
+                  Shop <ChevronDown className="ml-1 w-4 h-4" />
+                </Link>
+              </div>
+              <div className="mega-menu">
+                <div className="container mx-auto px-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div>
                       <h3 className="font-playfair font-semibold text-lg mb-4">Hair Extensions</h3>
