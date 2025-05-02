@@ -20,6 +20,7 @@ import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/not-found";
 import AuthPage from "@/pages/auth-page";
+import CustomerOrders from "@/pages/Account/Orders";
 
 // Admin Pages
 import AdminLogin from "@/pages/Admin/Login";
@@ -31,10 +32,10 @@ import AdminCustomers from "@/pages/Admin/Customers";
 
 // Context
 import { CartProvider } from "@/context/CartContext";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { Loader2 } from "lucide-react";
 
-// Simple protected route component
+// Simple protected routes
 const ProtectedAdminRoute = ({ component: Component }: { component: React.ComponentType }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [, setLocation] = useLocation();
@@ -72,6 +73,31 @@ const ProtectedAdminRoute = ({ component: Component }: { component: React.Compon
   );
 };
 
+const ProtectedCustomerRoute = ({ component: Component }: { component: React.ComponentType }) => {
+  const { isCustomerLoggedIn, isAuthenticating } = useAuth();
+  const [, setLocation] = useLocation();
+  
+  useEffect(() => {
+    if (!isAuthenticating && !isCustomerLoggedIn) {
+      setLocation("/auth");
+    }
+  }, [isCustomerLoggedIn, isAuthenticating, setLocation]);
+  
+  if (isAuthenticating) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+  
+  if (!isCustomerLoggedIn) {
+    return null; // Redirect is handled in useEffect
+  }
+  
+  return <Component />;
+};
+
 function Router() {
   return (
     <Switch>
@@ -89,6 +115,9 @@ function Router() {
       <Route path="/login" component={AuthPage} />
       <Route path="/register" component={AuthPage} />
       <Route path="/account" component={AuthPage} />
+      <Route path="/account/orders">
+        {() => <ProtectedCustomerRoute component={CustomerOrders} />}
+      </Route>
       <Route path="/auth" component={AuthPage} />
       
       {/* Admin Routes */}
