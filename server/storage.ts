@@ -155,6 +155,9 @@ export const storage = {
     
     const [{ count }] = await countFiltered;
     
+    // Log the query parameters and result count for debugging
+    console.log("Product query params:", params, "Found products:", products.length, "Total count:", count);
+    
     return {
       products,
       total: count,

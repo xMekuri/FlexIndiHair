@@ -218,15 +218,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const limitNum = parseInt(limit as string);
       const offset = (pageNum - 1) * limitNum;
 
-      const result = await storage.getAllProducts({
-        active: active === "true",
-        categoryId: categoryId ? parseInt(categoryId as string) : undefined,
-        featured: featured === "true",
-        search: search as string,
+      // Only filter by active if the parameter is explicitly provided
+      const params: any = {
         limit: limitNum,
         offset,
         sort: sort as string,
-      });
+      };
+      
+      if (active !== undefined) {
+        params.active = active === "true";
+      }
+      
+      if (categoryId) {
+        params.categoryId = parseInt(categoryId as string);
+      }
+      
+      if (featured !== undefined) {
+        params.featured = featured === "true";  
+      }
+      
+      if (search) {
+        params.search = search as string;
+      }
+      
+      console.log("Product API request params:", params);
+      const result = await storage.getAllProducts(params);
 
       res.json({
         products: result.products,
