@@ -85,29 +85,35 @@ export const productReviews = pgTable("product_reviews", {
 // Order-related tables
 export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
-  customerId: integer("customer_id").references(() => customers.id),
+  userId: integer("user_id"),
+  orderNumber: text("order_number"),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  address: text("address").notNull(),
+  city: text("city").notNull(),
+  state: text("state").notNull(),
+  zipCode: text("zip_code").notNull(),
+  country: text("country").notNull(),
+  orderNotes: text("order_notes"),
   status: text("status").notNull().default("pending"), // pending, processing, shipped, delivered, cancelled
-  total: decimal("total", { precision: 10, scale: 2 }).notNull(),
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
-  tax: decimal("tax", { precision: 10, scale: 2 }).notNull(),
   shipping: decimal("shipping", { precision: 10, scale: 2 }).notNull(),
-  shippingAddress: json("shipping_address").notNull(),
-  billingAddress: json("billing_address").notNull(),
+  total: decimal("total", { precision: 10, scale: 2 }).notNull(),
   paymentMethod: text("payment_method").notNull(),
   paymentStatus: text("payment_status").notNull().default("pending"), // pending, paid, failed
-  notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const orderItems = pgTable("order_items", {
   id: serial("id").primaryKey(),
   orderId: integer("order_id").references(() => orders.id).notNull(),
   productId: integer("product_id").references(() => products.id).notNull(),
-  quantity: integer("quantity").notNull(),
+  name: text("name").notNull(),
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  quantity: integer("quantity").notNull(),
   totalPrice: decimal("total_price", { precision: 10, scale: 2 }).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Define relations
@@ -130,11 +136,7 @@ export const customersRelations = relations(customers, ({ many }) => ({
   productReviews: many(productReviews),
 }));
 
-export const ordersRelations = relations(orders, ({ one, many }) => ({
-  customer: one(customers, {
-    fields: [orders.customerId],
-    references: [customers.id],
-  }),
+export const ordersRelations = relations(orders, ({ many }) => ({
   orderItems: many(orderItems),
 }));
 
@@ -191,7 +193,6 @@ export const productInsertSchema = createInsertSchema(products, {
   slug: (schema) => schema.min(2, "Slug must be at least 2 characters long"),
   description: (schema) => schema.min(10, "Description must be at least 10 characters long"),
   price: (schema) => schema.refine((val) => parseFloat(String(val)) > 0, { message: "Price must be positive" }),
-  stock: (schema) => schema.refine((val) => parseInt(String(val)) >= 0, { message: "Stock cannot be negative" }),
 });
 
 export const productImageInsertSchema = createInsertSchema(productImages);
