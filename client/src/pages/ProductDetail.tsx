@@ -95,8 +95,9 @@ export default function ProductDetail() {
   };
   
   // Product images including main image and additional images
+  const mainImage = product.mainImageUrl || product.imageUrl;
   const allImages = [
-    product.mainImageUrl,
+    mainImage,
     ...(product.productImages?.map((img: any) => img.imageUrl) || [])
   ];
   

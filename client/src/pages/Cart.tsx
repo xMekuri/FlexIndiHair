@@ -74,7 +74,7 @@ export default function Cart() {
                       <div className="md:col-span-6 flex items-center mb-4 md:mb-0">
                         <div className="relative w-20 h-20 mr-4 flex-shrink-0">
                           <img 
-                            src={item.mainImageUrl} 
+                            src={item.mainImageUrl || item.imageUrl} 
                             alt={item.name} 
                             className="w-full h-full object-cover rounded"
                           />

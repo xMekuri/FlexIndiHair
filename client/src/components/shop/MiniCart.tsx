@@ -20,7 +20,7 @@ const MiniCart = () => {
               id={item.id}
               name={item.name}
               price={item.price}
-              imageUrl={item.imageUrl}
+              imageUrl={item.imageUrl || item.mainImageUrl}
               quantity={item.quantity}
               mini={true}
             />
