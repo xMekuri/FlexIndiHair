@@ -213,7 +213,7 @@ export const productInsertSchema = createInsertSchema(products, {
 export const productImageInsertSchema = createInsertSchema(productImages);
 export const productReviewInsertSchema = createInsertSchema(productReviews);
 
-// Custom order insert schema with date handling
+// Custom order insert schema with date handling and numeric conversions
 export const orderInsertSchema = createInsertSchema(orders, {
   // Transform expected delivery date to string format
   expectedDeliveryDate: z.preprocess(
@@ -244,10 +244,34 @@ export const orderInsertSchema = createInsertSchema(orders, {
       return new Date().toISOString();
     },
     z.string().optional()
+  ),
+  // Handle monetary values that may come as numbers but need to be strings
+  subtotal: z.preprocess(
+    (val) => typeof val === 'number' ? val.toString() : val,
+    z.string()
+  ),
+  shipping: z.preprocess(
+    (val) => typeof val === 'number' ? val.toString() : val,
+    z.string()
+  ),
+  total: z.preprocess(
+    (val) => typeof val === 'number' ? val.toString() : val,
+    z.string()
   )
 });
 
-export const orderItemInsertSchema = createInsertSchema(orderItems);
+// Custom order item insert schema with numeric conversions
+export const orderItemInsertSchema = createInsertSchema(orderItems, {
+  // Handle monetary values that may come as numbers but need to be strings
+  price: z.preprocess(
+    (val) => typeof val === 'number' ? val.toString() : val,
+    z.string()
+  ),
+  totalPrice: z.preprocess(
+    (val) => typeof val === 'number' ? val.toString() : val,
+    z.string()
+  )
+});
 
 export const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),

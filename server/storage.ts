@@ -536,16 +536,21 @@ export const storage = {
       
       console.log("Order created:", newOrder);
       
-      // Add order items
-      const orderItems = items.map(item => ({
+      // Add order items with validation
+      const orderItemsWithOrderId = items.map(item => ({
         ...item,
         orderId: newOrder.id,
       }));
       
-      console.log("Inserting order items:", orderItems);
+      // Validate order items through schema validation
+      const validatedOrderItems = orderItemsWithOrderId.map(item => 
+        schema.orderItemInsertSchema.parse(item)
+      );
+      
+      console.log("Inserting validated order items:", validatedOrderItems);
       
       await db.insert(schema.orderItems)
-        .values(orderItems);
+        .values(validatedOrderItems);
       
       return await this.getOrderById(newOrder.id);
     } catch (error) {
