@@ -212,7 +212,41 @@ export const productInsertSchema = createInsertSchema(products, {
 
 export const productImageInsertSchema = createInsertSchema(productImages);
 export const productReviewInsertSchema = createInsertSchema(productReviews);
-export const orderInsertSchema = createInsertSchema(orders);
+
+// Custom order insert schema with date handling
+export const orderInsertSchema = createInsertSchema(orders, {
+  // Transform expected delivery date to string format
+  expectedDeliveryDate: z.preprocess(
+    (val) => {
+      if (!val) return null;
+      if (typeof val === 'string') return val;
+      if (val instanceof Date) return val.toISOString();
+      return null;
+    },
+    z.string().nullable().optional()
+  ),
+  // Transform created at to string format
+  createdAt: z.preprocess(
+    (val) => {
+      if (!val) return new Date().toISOString();
+      if (typeof val === 'string') return val;
+      if (val instanceof Date) return val.toISOString();
+      return new Date().toISOString();
+    },
+    z.string().optional()
+  ),
+  // Transform updated at to string format
+  updatedAt: z.preprocess(
+    (val) => {
+      if (!val) return new Date().toISOString();
+      if (typeof val === 'string') return val;
+      if (val instanceof Date) return val.toISOString();
+      return new Date().toISOString();
+    },
+    z.string().optional()
+  )
+});
+
 export const orderItemInsertSchema = createInsertSchema(orderItems);
 
 export const loginSchema = z.object({
