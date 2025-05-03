@@ -122,6 +122,7 @@ export default function Checkout() {
     }
     
     try {
+      console.log("Form submission step 2 - Entering try block");
       setIsSubmitting(true);
       
       // Prepare billing address
@@ -144,6 +145,8 @@ export default function Checkout() {
             zipCode: data.billingZipCode || "",
             country: data.billingCountry || "",
           };
+          
+      console.log("Form submission step 3 - Prepared billing address", { billingAddress });
       
       // Prepare order data - include fields for both old and new schema
       const orderData = {
@@ -189,18 +192,42 @@ export default function Checkout() {
         totalPrice: item.price * item.quantity,
       }));
       
-      // Submit order
-      const response = await apiRequest('POST', '/api/orders', {
-        orderData,
-        orderItems,
-      });
+      console.log("Form submission step 4 - Ready to submit order", { orderData, orderItems });
       
-      if (!response.ok) {
-        throw new Error('Failed to create order');
+      // Submit order
+      let orderResponse;
+      
+      try {
+        orderResponse = await apiRequest('POST', '/api/orders', {
+          orderData,
+          orderItems,
+        });
+        
+        console.log("Form submission step 5 - API response", { 
+          status: orderResponse.status, 
+          ok: orderResponse.ok,
+          statusText: orderResponse.statusText
+        });
+        
+        if (!orderResponse.ok) {
+          const errorText = await orderResponse.text();
+          console.error("Order API error response:", errorText);
+          throw new Error(`Failed to create order: ${orderResponse.status} ${orderResponse.statusText}`);
+        }
+      } catch (apiError) {
+        console.error("API request error:", apiError);
+        throw apiError;
       }
       
       // Get the created order
-      const order = await response.json();
+      let order;
+      try {
+        order = await orderResponse.json();
+        console.log("Form submission step 6 - Order created", { order });
+      } catch (error) {
+        console.error("Error parsing order response", error);
+        throw error;
+      }
       
       // Clear cart and show confirmation
       clearCart();
