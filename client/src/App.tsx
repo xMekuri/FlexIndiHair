@@ -26,6 +26,7 @@ import CustomerOrders from "@/pages/Account/Orders";
 import AdminLogin from "@/pages/Admin/Login";
 import AdminDashboard from "@/pages/Admin/Dashboard";
 import AdminProducts from "@/pages/Admin/Products";
+import EditProduct from "@/pages/Admin/EditProduct";
 import AdminOrders from "@/pages/Admin/Orders";
 import AdminCategories from "@/pages/Admin/Categories";
 import AdminCustomers from "@/pages/Admin/Customers";
@@ -128,6 +129,9 @@ function Router() {
       </Route>
       <Route path="/admin/products">
         {() => <ProtectedAdminRoute component={AdminProducts} />}
+      </Route>
+      <Route path="/admin/products/:id/edit">
+        {() => <ProtectedAdminRoute component={EditProduct} />}
       </Route>
       <Route path="/admin/orders">
         {() => <ProtectedAdminRoute component={AdminOrders} />}

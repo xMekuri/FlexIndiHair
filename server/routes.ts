@@ -302,7 +302,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Parse numeric values
       if (productData.price) productData.price = parseFloat(productData.price);
       if (productData.compareAtPrice) productData.compareAtPrice = parseFloat(productData.compareAtPrice);
-      if (productData.stock) productData.stock = parseInt(productData.stock);
+      if (productData.stockQuantity) productData.stockQuantity = parseInt(productData.stockQuantity);
+      if (productData.stock) productData.stockQuantity = parseInt(productData.stock); // backward compatibility
       if (productData.categoryId) productData.categoryId = parseInt(productData.categoryId);
 
       // Parse boolean values
