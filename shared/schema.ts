@@ -36,6 +36,7 @@ export const categories = pgTable("categories", {
   slug: text("slug").notNull().unique(),
   description: text("description"),
   imageUrl: text("image_url"),
+  parent_id: integer("parent_id").references(() => categories.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -127,8 +128,16 @@ export const productsRelations = relations(products, ({ one, many }) => ({
   orderItems: many(orderItems),
 }));
 
-export const categoriesRelations = relations(categories, ({ many }) => ({
+export const categoriesRelations = relations(categories, ({ one, many }) => ({
   products: many(products),
+  parent: one(categories, {
+    fields: [categories.parent_id],
+    references: [categories.id],
+    relationName: 'parentCategory'
+  }),
+  subcategories: many(categories, {
+    relationName: 'parentCategory'
+  })
 }));
 
 export const customersRelations = relations(customers, ({ many }) => ({
