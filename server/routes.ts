@@ -651,15 +651,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     `${apiPrefix}/orders`,
     optionalCustomer,
     handleErrors(async (req, res) => {
-      const { orderData, orderItems } = req.body;
+      try {
+        console.log("Order creation request received:", req.body);
+        const { orderData, orderItems } = req.body;
 
-      // If authenticated, associate order with customer
-      if (req.customer) {
-        orderData.customerId = req.customer.id;
+        if (!orderData) {
+          return res.status(400).json({ error: "Missing orderData in request body" });
+        }
+
+        if (!orderItems || !Array.isArray(orderItems) || orderItems.length === 0) {
+          return res.status(400).json({ error: "Missing or invalid orderItems in request body" });
+        }
+
+        // If authenticated, associate order with customer
+        if (req.customer) {
+          console.log("Authenticated customer creating order:", req.customer);
+          orderData.customerId = req.customer.id;
+          orderData.user_id = req.customer.id; // Add both for compatibility
+        }
+
+        console.log("Creating order with data:", { orderData, orderItems });
+        const order = await storage.createOrder(orderData, orderItems);
+        console.log("Order created successfully:", order);
+        res.status(201).json(order);
+      } catch (error) {
+        console.error("Error creating order:", error);
+        res.status(500).json({ 
+          error: "Failed to create order", 
+          message: error.message,
+          stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
       }
-
-      const order = await storage.createOrder(orderData, orderItems);
-      res.status(201).json(order);
     })
   );
 

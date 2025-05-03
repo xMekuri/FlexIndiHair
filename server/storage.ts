@@ -509,20 +509,44 @@ export const storage = {
   },
   
   async createOrder(order: schema.OrderInsert, items: schema.OrderItemInsert[]) {
-    const [newOrder] = await db.insert(schema.orders)
-      .values(order)
-      .returning();
-    
-    // Add order items
-    const orderItems = items.map(item => ({
-      ...item,
-      orderId: newOrder.id,
-    }));
-    
-    await db.insert(schema.orderItems)
-      .values(orderItems);
-    
-    return await this.getOrderById(newOrder.id);
+    try {
+      console.log("Creating order with data:", { order, items });
+      
+      // Handle the case where the schema name is customerId but DB column is user_id
+      const normalizedOrder = {
+        ...order,
+        // Make sure user_id is populated if only customerId is provided
+        user_id: order.user_id || order.customerId,
+        // Ensure these required fields are present with default values if not provided
+        order_number: order.orderNumber || `ORD-${Date.now()}`,
+        payment_status: order.paymentStatus || 'pending',
+        status: order.status || 'pending',
+      };
+      
+      console.log("Normalized order data:", normalizedOrder);
+      
+      const [newOrder] = await db.insert(schema.orders)
+        .values(normalizedOrder)
+        .returning();
+      
+      console.log("Order created:", newOrder);
+      
+      // Add order items
+      const orderItems = items.map(item => ({
+        ...item,
+        orderId: newOrder.id,
+      }));
+      
+      console.log("Inserting order items:", orderItems);
+      
+      await db.insert(schema.orderItems)
+        .values(orderItems);
+      
+      return await this.getOrderById(newOrder.id);
+    } catch (error) {
+      console.error("Error creating order:", error);
+      throw error;
+    }
   },
   
   async updateOrderStatus(id: number, status: string, expectedDeliveryDate?: Date | null) {

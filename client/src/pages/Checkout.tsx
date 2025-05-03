@@ -160,6 +160,8 @@ export default function Checkout() {
       
       // Prepare order data - include fields for both old and new schema
       const orderData = {
+        // Use both user_id and customerId for compatibility
+        user_id: customer?.id,
         customerId: customer?.id,
         // Add fields from shipping address directly to the order for schema compatibility
         firstName: data.firstName,
@@ -913,6 +915,8 @@ export default function Checkout() {
                               try {
                                 // Create a basic order directly with the API
                                 const debugOrderData = {
+                                  // Use both user_id and customerId for compatibility
+                                  user_id: customer?.id,
                                   customerId: customer?.id,
                                   firstName: "Test",
                                   lastName: "User",
