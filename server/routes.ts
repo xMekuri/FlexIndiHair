@@ -291,33 +291,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     requireAdmin,
     upload.single("mainImage"),
     handleErrors(async (req, res) => {
-      const productData = schema.productInsertSchema.parse({
+      // Convert types as needed before validation
+      const productData = {
         ...req.body,
-        price: parseFloat(req.body.price),
-        compareAtPrice: req.body.compareAtPrice ? parseFloat(req.body.compareAtPrice) : null,
+        // Convert numerical strings to numbers if needed
+        price: typeof req.body.price === 'number' 
+          ? req.body.price.toString() 
+          : req.body.price,
+        compareAtPrice: req.body.compareAtPrice 
+          ? req.body.compareAtPrice.toString()
+          : null,
         // Use stockQuantity or fallback to stock for backward compatibility
-        stockQuantity: req.body.stockQuantity ? parseInt(req.body.stockQuantity) : 
-                      (req.body.stock ? parseInt(req.body.stock) : 0),
-        categoryId: parseInt(req.body.categoryId),
-        isActive: req.body.isActive === "true",
-        isFeatured: req.body.isFeatured === "true",
-        isNew: req.body.isNew === "true",
-        isOnSale: req.body.isOnSale === "true",
-      });
+        stockQuantity: req.body.stockQuantity 
+          ? parseInt(req.body.stockQuantity.toString()) 
+          : (req.body.stock ? parseInt(req.body.stock.toString()) : 0),
+        categoryId: parseInt(req.body.categoryId.toString()),
+        // Convert boolean strings to actual booleans
+        isActive: req.body.isActive === true || req.body.isActive === "true",
+        isFeatured: req.body.isFeatured === true || req.body.isFeatured === "true", 
+        isNew: req.body.isNew === true || req.body.isNew === "true",
+        isOnSale: req.body.isOnSale === true || req.body.isOnSale === "true",
+        isBestSeller: req.body.isBestSeller === true || req.body.isBestSeller === "true",
+      };
+      
+      console.log("Pre-validation product data:", productData);
+      
+      // Validate the product data
+      const validatedData = schema.productInsertSchema.parse(productData);
 
+      // Make a new product object with the validated data
+      const newProductData = { ...validatedData };
+      
       // Add main image if uploaded
       if (req.file) {
-        productData.imageUrl = `/uploads/${req.file.filename}`;
+        newProductData.imageUrl = `/uploads/${req.file.filename}`;
       }
       
-      // Handle imageUrl field from the form
-      if (productData.imageUrl) {
-        // Keep the imageUrl (which matches our database schema)
-        productData.imageUrl = productData.imageUrl;
+      // Make sure we use the imageUrl from the form if available
+      if (productData.imageUrl && !newProductData.imageUrl) {
+        newProductData.imageUrl = productData.imageUrl;
       }
 
-      console.log("Creating product with data:", productData);
-      const product = await storage.createProduct(productData);
+      console.log("Creating product with data:", newProductData);
+      const product = await storage.createProduct(newProductData);
       res.status(201).json(product);
     })
   );
@@ -328,30 +344,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     upload.single("mainImage"),
     handleErrors(async (req, res) => {
       const id = parseInt(req.params.id);
-      let productData: any = { ...req.body };
 
-      // Parse numeric values
-      if (productData.price) productData.price = parseFloat(productData.price);
-      if (productData.compareAtPrice) productData.compareAtPrice = parseFloat(productData.compareAtPrice);
-      if (productData.stockQuantity) productData.stockQuantity = parseInt(productData.stockQuantity);
-      if (productData.stock) productData.stockQuantity = parseInt(productData.stock); // backward compatibility
-      if (productData.categoryId) productData.categoryId = parseInt(productData.categoryId);
-
-      // Parse boolean values
-      if (productData.isActive !== undefined) productData.isActive = productData.isActive === "true";
-      if (productData.isFeatured !== undefined) productData.isFeatured = productData.isFeatured === "true";
-      if (productData.isNew !== undefined) productData.isNew = productData.isNew === "true";
-      if (productData.isOnSale !== undefined) productData.isOnSale = productData.isOnSale === "true";
+      // Convert types as needed before validation
+      const productData = {
+        ...req.body,
+        // Convert numerical strings to numbers if needed
+        price: typeof req.body.price === 'number' 
+          ? req.body.price.toString() 
+          : req.body.price,
+        compareAtPrice: req.body.compareAtPrice 
+          ? req.body.compareAtPrice.toString()
+          : null,
+        // Use stockQuantity or fallback to stock for backward compatibility
+        stockQuantity: req.body.stockQuantity 
+          ? parseInt(req.body.stockQuantity.toString()) 
+          : (req.body.stock ? parseInt(req.body.stock.toString()) : undefined),
+        categoryId: req.body.categoryId ? parseInt(req.body.categoryId.toString()) : undefined,
+        // Convert boolean strings to actual booleans
+        isActive: req.body.isActive === true || req.body.isActive === "true",
+        isFeatured: req.body.isFeatured === true || req.body.isFeatured === "true", 
+        isNew: req.body.isNew === true || req.body.isNew === "true",
+        isOnSale: req.body.isOnSale === true || req.body.isOnSale === "true",
+        isBestSeller: req.body.isBestSeller === true || req.body.isBestSeller === "true",
+      };
 
       // Add main image if uploaded
       if (req.file) {
         productData.imageUrl = `/uploads/${req.file.filename}`;
       }
       
-      // Handle imageUrl field from the form
-      if (productData.imageUrl) {
-        // Keep the imageUrl (which matches our database schema)
-        productData.imageUrl = productData.imageUrl;
+      // Make sure we use the imageUrl from the form if already set
+      if (req.body.imageUrl && !productData.imageUrl) {
+        productData.imageUrl = req.body.imageUrl;
       }
 
       console.log("Updating product with data:", productData);
