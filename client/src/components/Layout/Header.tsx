@@ -100,33 +100,38 @@ export default function Header() {
               <Link href="/products" className="font-medium hover:text-primary transition py-2 flex items-center">
                 Shop <ChevronDown className="ml-1 w-4 h-4" />
               </Link>
-              <div className="absolute left-0 top-full bg-white shadow-lg z-50 hidden group-hover:block w-64">
+              <div className="absolute left-0 top-full bg-white shadow-lg z-50 hidden group-hover:block w-80">
                 <div className="p-4">
-                  <h3 className="font-semibold mb-2">Hair Extensions</h3>
+                  <h3 className="font-semibold mb-2">Wigs</h3>
                   <ul className="space-y-2">
-                    <li><Link href="/products?category=clip-in-extensions" className="block hover:text-primary transition">Clip-In Extensions</Link></li>
-                    <li><Link href="/products?category=tape-in-extensions" className="block hover:text-primary transition">Tape-In Extensions</Link></li>
-                    <li><Link href="/products?category=halo-extensions" className="block hover:text-primary transition">Halo Extensions</Link></li>
-                    <li><Link href="/products?category=nano-ring-extensions" className="block hover:text-primary transition">Nano Ring Extensions</Link></li>
-                    <li><Link href="/products?category=weft-extensions" className="block hover:text-primary transition">Weft Extensions</Link></li>
+                    <li><Link href="/products?category=full-lace-wig" className="block hover:text-primary transition">Full Lace Wig</Link></li>
+                    <li><Link href="/products?category=front-lace-wig" className="block hover:text-primary transition">Front Lace Wig</Link></li>
+                    <li><Link href="/products?category=360-lace-wig" className="block hover:text-primary transition">360 Lace Wig</Link></li>
+                    <li><Link href="/products?category=u-part-wig" className="block hover:text-primary transition">U-Part Wig</Link></li>
+                    <li><Link href="/products?category=v-part-wig" className="block hover:text-primary transition">V-Part Wig</Link></li>
+                    <li><Link href="/products?category=chemo-patient-wig" className="block hover:text-primary transition">Chemo Patient Wig</Link></li>
+                    <li><Link href="/products?category=black-cap-wig" className="block hover:text-primary transition">Black Cap Wig</Link></li>
                   </ul>
                   
-                  <h3 className="font-semibold mt-4 mb-2">By Hair Type</h3>
+                  <h3 className="font-semibold mt-4 mb-2">Hair Toppers</h3>
                   <ul className="space-y-2">
-                    <li><Link href="/products?type=straight" className="block hover:text-primary transition">Straight Hair</Link></li>
-                    <li><Link href="/products?type=wavy" className="block hover:text-primary transition">Wavy Hair</Link></li>
-                    <li><Link href="/products?type=curly" className="block hover:text-primary transition">Curly Hair</Link></li>
-                    <li><Link href="/products?type=colored" className="block hover:text-primary transition">Colored Hair</Link></li>
-                    <li><Link href="/products?type=ombre" className="block hover:text-primary transition">Ombre Hair</Link></li>
+                    <li><Link href="/products?category=silk-base-hair-topper" className="block hover:text-primary transition">Silk Base Hair Topper</Link></li>
+                    <li><Link href="/products?category=mono-base-hair-topper" className="block hover:text-primary transition">Mono Base Hair Topper</Link></li>
                   </ul>
                   
-                  <h3 className="font-semibold mt-4 mb-2">Hair Care</h3>
+                  <h3 className="font-semibold mt-4 mb-2">Hair Extensions</h3>
                   <ul className="space-y-2">
-                    <li><Link href="/products?category=shampoo-conditioner" className="block hover:text-primary transition">Shampoo & Conditioner</Link></li>
-                    <li><Link href="/products?category=hair-masks" className="block hover:text-primary transition">Hair Masks</Link></li>
-                    <li><Link href="/products?category=hair-brushes" className="block hover:text-primary transition">Hair Brushes</Link></li>
-                    <li><Link href="/products?category=styling-products" className="block hover:text-primary transition">Styling Products</Link></li>
-                    <li><Link href="/products?category=hair-treatments" className="block hover:text-primary transition">Hair Treatments</Link></li>
+                    <li><Link href="/products?category=weft-hair-bundles" className="block hover:text-primary transition">Weft Hair Bundles</Link></li>
+                    <li><Link href="/products?category=clip-on-extensions" className="block hover:text-primary transition">Clip-on Hair Extensions</Link></li>
+                    <li><Link href="/products?category=ponytail-extensions" className="block hover:text-primary transition">Ponytail Hair Extensions</Link></li>
+                    <li><Link href="/products?category=halo-extensions" className="block hover:text-primary transition">Halo Hair Extensions</Link></li>
+                    <li><Link href="/products?category=tape-in-extensions" className="block hover:text-primary transition">Tape-in Hair Extensions</Link></li>
+                    <li><Link href="/products?category=keratin-tip-extensions" className="block hover:text-primary transition">Keratin/I-Tip/U-Tip Extensions</Link></li>
+                  </ul>
+                  
+                  <h3 className="font-semibold mt-4 mb-2">Bangs & Fringes</h3>
+                  <ul className="space-y-2">
+                    <li><Link href="/products?category=clip-based-bangs" className="block hover:text-primary transition">Clip-based Bangs/Fringes</Link></li>
                   </ul>
                   
                   <div className="pt-3 mt-4 border-t">
@@ -229,9 +234,24 @@ export default function Header() {
                 </button>
               </div>
               <ul className={`pl-4 mt-2 space-y-2 ${mobileSubmenus.shop ? 'block' : 'hidden'}`}>
-                <li><Link href="/products?category=hair-extensions" className="block py-1">Hair Extensions</Link></li>
-                <li><Link href="/products?category=hair-type" className="block py-1">By Hair Type</Link></li>
-                <li><Link href="/products?category=hair-care" className="block py-1">Hair Care</Link></li>
+                <li className="font-medium mt-2">Wigs</li>
+                <li><Link href="/products?category=full-lace-wig" className="block py-1">Full Lace Wig</Link></li>
+                <li><Link href="/products?category=front-lace-wig" className="block py-1">Front Lace Wig</Link></li>
+                <li><Link href="/products?category=360-lace-wig" className="block py-1">360 Lace Wig</Link></li>
+                <li><Link href="/products?category=u-part-wig" className="block py-1">U-Part Wig</Link></li>
+                <li><Link href="/products?category=v-part-wig" className="block py-1">V-Part Wig</Link></li>
+                
+                <li className="font-medium mt-2">Hair Toppers</li>
+                <li><Link href="/products?category=silk-base-hair-topper" className="block py-1">Silk Base Hair Topper</Link></li>
+                <li><Link href="/products?category=mono-base-hair-topper" className="block py-1">Mono Base Hair Topper</Link></li>
+                
+                <li className="font-medium mt-2">Hair Extensions</li>
+                <li><Link href="/products?category=weft-hair-bundles" className="block py-1">Weft Hair Bundles</Link></li>
+                <li><Link href="/products?category=clip-on-extensions" className="block py-1">Clip-on Hair Extensions</Link></li>
+                <li><Link href="/products?category=ponytail-extensions" className="block py-1">Ponytail Hair Extensions</Link></li>
+                
+                <li className="font-medium mt-2">Bangs & Fringes</li>
+                <li><Link href="/products?category=clip-based-bangs" className="block py-1">Clip-based Bangs/Fringes</Link></li>
               </ul>
             </li>
             <li><Link href="/about" className="block py-2 font-medium">About Us</Link></li>
