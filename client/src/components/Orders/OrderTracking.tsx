@@ -4,7 +4,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { OrderProgressTracker } from "./OrderStatus";
+import { OrderStatusTracker } from "./OrderStatusTracker";
 
 type OrderItem = {
   id: number;
@@ -22,6 +22,7 @@ type Order = {
   customerId: number | null;
   status: string;
   createdAt: string;
+  expectedDeliveryDate?: string | null;
   total: number;
   subtotal: number;
   tax: number;
@@ -124,7 +125,10 @@ export default function OrderTracking({ orderId }: OrderTrackingProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-6">
-          <OrderProgressTracker status={order.status} />
+          <OrderStatusTracker 
+            status={order.status} 
+            expectedDeliveryDate={order.expectedDeliveryDate}
+          />
           
           <div className="mt-8 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

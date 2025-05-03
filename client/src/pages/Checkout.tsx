@@ -143,13 +143,20 @@ export default function Checkout() {
             country: data.billingCountry || "",
           };
       
-      // Prepare order data
+      // Prepare order data - include fields for both old and new schema
       const orderData = {
         customerId: customer?.id,
-        subtotal,
-        tax,
-        shipping: shippingFee,
-        total,
+        // Add fields from shipping address directly to the order for schema compatibility
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        city: data.city,
+        state: data.state,
+        zipCode: data.zipCode,
+        country: data.country,
+        // Include the complete shipping and billing addresses
         shippingAddress: {
           firstName: data.firstName,
           lastName: data.lastName,
@@ -160,10 +167,15 @@ export default function Checkout() {
           country: data.country,
         },
         billingAddress,
+        subtotal,
+        tax,
+        shipping: shippingFee,
+        total,
         paymentMethod: data.paymentMethod,
         paymentStatus: "pending", // In a real app, this would be updated after payment processing
         notes: data.notes,
         status: "pending",
+        expectedDeliveryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
       };
       
       // Prepare order items
@@ -171,6 +183,7 @@ export default function Checkout() {
         productId: item.id,
         quantity: item.quantity,
         price: item.price,
+        name: item.name,
         totalPrice: item.price * item.quantity,
       }));
       
