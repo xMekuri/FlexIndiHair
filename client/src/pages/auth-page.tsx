@@ -68,15 +68,17 @@ export default function AuthPage() {
         throw new Error(result.message || "Login failed");
       }
       
-      // Store token in localStorage
+      // Store token and customer data in localStorage
       localStorage.setItem("customer_token", result.token);
+      localStorage.setItem("customer_data", JSON.stringify(result.customer));
       
       toast({
         title: "Login Successful",
         description: "Welcome back to FlexIndi Hair",
       });
       
-      setLocation("/");
+      // Force page reload to update auth state throughout the app
+      window.location.href = "/";
     } catch (error: any) {
       console.error("Login error:", error);
       toast({
@@ -104,15 +106,17 @@ export default function AuthPage() {
         throw new Error(result.message || "Registration failed");
       }
       
-      // Store token in localStorage
+      // Store token and customer data in localStorage
       localStorage.setItem("customer_token", result.token);
+      localStorage.setItem("customer_data", JSON.stringify(result.customer));
       
       toast({
         title: "Registration Successful",
         description: "Welcome to FlexIndi Hair! Your account has been created.",
       });
       
-      setLocation("/");
+      // Force page reload to update auth state throughout the app
+      window.location.href = "/";
     } catch (error: any) {
       console.error("Registration error:", error);
       toast({
