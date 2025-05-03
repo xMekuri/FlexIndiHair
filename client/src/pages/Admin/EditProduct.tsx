@@ -66,7 +66,14 @@ export default function EditProduct() {
   const { data: categories, isLoading: isCategoriesLoading } = useQuery({
     queryKey: ['/api/categories'],
     queryFn: async () => {
-      const response = await fetch('/api/categories');
+      // Get admin token from localStorage
+      const token = localStorage.getItem('admin_token');
+      
+      const response = await fetch('/api/categories', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
       if (!response.ok) throw new Error('Failed to fetch categories');
       return response.json();
     },
@@ -76,7 +83,14 @@ export default function EditProduct() {
   const { data: product, isLoading: isProductLoading } = useQuery({
     queryKey: ['/api/products', id],
     queryFn: async () => {
-      const response = await fetch(`/api/products/${id}`);
+      // Get admin token from localStorage
+      const token = localStorage.getItem('admin_token');
+      
+      const response = await fetch(`/api/products/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
       if (!response.ok) throw new Error('Failed to fetch product');
       return response.json();
     },
@@ -126,10 +140,14 @@ export default function EditProduct() {
   // Update mutation
   const updateProduct = useMutation({
     mutationFn: async (data: ProductFormValues) => {
+      // Get admin token from localStorage
+      const token = localStorage.getItem('admin_token');
+      
       const response = await fetch(`/api/products/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(data),
       });
