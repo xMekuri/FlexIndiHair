@@ -525,9 +525,19 @@ export const storage = {
     return await this.getOrderById(newOrder.id);
   },
   
-  async updateOrderStatus(id: number, status: string) {
+  async updateOrderStatus(id: number, status: string, expectedDeliveryDate?: Date | null) {
+    const updateData: any = {
+      status, 
+      updatedAt: new Date()
+    };
+    
+    // Only set expected delivery date if provided
+    if (expectedDeliveryDate !== undefined) {
+      updateData.expectedDeliveryDate = expectedDeliveryDate;
+    }
+    
     const [updatedOrder] = await db.update(schema.orders)
-      .set({status, updatedAt: new Date()})
+      .set(updateData)
       .where(eq(schema.orders.id, id))
       .returning();
     return updatedOrder;

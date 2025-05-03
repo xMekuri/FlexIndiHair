@@ -668,9 +668,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     requireAdmin,
     handleErrors(async (req, res) => {
       const id = parseInt(req.params.id);
-      const { status } = req.body;
+      const { status, expectedDeliveryDate } = req.body;
 
-      const updatedOrder = await storage.updateOrderStatus(id, status);
+      // Parse expected delivery date if provided
+      let parsedDeliveryDate = undefined;
+      if (expectedDeliveryDate) {
+        try {
+          parsedDeliveryDate = new Date(expectedDeliveryDate);
+          
+          // Check if the date is valid
+          if (isNaN(parsedDeliveryDate.getTime())) {
+            return res.status(400).json({ 
+              message: "Invalid expected delivery date format. Please use ISO format (YYYY-MM-DD)." 
+            });
+          }
+        } catch (error) {
+          return res.status(400).json({ 
+            message: "Invalid expected delivery date format. Please use ISO format (YYYY-MM-DD)." 
+          });
+        }
+      }
+
+      // Calculate a default expected delivery date based on status
+      if (!parsedDeliveryDate && status === 'processing') {
+        parsedDeliveryDate = new Date();
+        parsedDeliveryDate.setDate(parsedDeliveryDate.getDate() + 5); // 5 days from now
+      } else if (!parsedDeliveryDate && status === 'out_for_delivery') {
+        parsedDeliveryDate = new Date();
+        parsedDeliveryDate.setDate(parsedDeliveryDate.getDate() + 2); // 2 days from now
+      }
+
+      const updatedOrder = await storage.updateOrderStatus(id, status, parsedDeliveryDate);
       if (!updatedOrder) {
         return res.status(404).json({ message: "Order not found" });
       }
