@@ -192,7 +192,8 @@ export default function Checkout() {
         paymentStatus: "pending", // In a real app, this would be updated after payment processing
         notes: data.notes,
         status: "pending",
-        expectedDeliveryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+        // Use string ISO format for date instead of Date object
+        expectedDeliveryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
       };
       
       // Prepare order items
@@ -953,7 +954,8 @@ export default function Checkout() {
                                   paymentStatus: "pending",
                                   notes: "Debug order",
                                   status: "pending",
-                                  expectedDeliveryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+                                  // Use string ISO format for date instead of Date object
+                                  expectedDeliveryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
                                 };
                                 
                                 const debugOrderItems = items.map(item => ({

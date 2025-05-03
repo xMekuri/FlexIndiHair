@@ -513,6 +513,7 @@ export const storage = {
       console.log("Creating order with data:", { order, items });
       
       // Handle the case where the schema name is customerId but DB column is user_id
+      // Also ensure dates are properly formatted as strings
       const normalizedOrder = {
         ...order,
         // Make sure user_id is populated if only customerId is provided
@@ -521,6 +522,30 @@ export const storage = {
         order_number: order.orderNumber || `ORD-${Date.now()}`,
         payment_status: order.paymentStatus || 'pending',
         status: order.status || 'pending',
+        // Format dates properly - expectedDeliveryDate might be a Date object, string, or undefined
+        expectedDeliveryDate: order.expectedDeliveryDate 
+          ? (typeof order.expectedDeliveryDate === 'string' 
+              ? order.expectedDeliveryDate 
+              : order.expectedDeliveryDate instanceof Date 
+                ? order.expectedDeliveryDate.toISOString() 
+                : new Date().toISOString()) 
+          : null,
+        // Ensure created_at is a proper date string
+        created_at: order.createdAt 
+          ? (typeof order.createdAt === 'string' 
+              ? order.createdAt 
+              : order.createdAt instanceof Date 
+                ? order.createdAt.toISOString() 
+                : new Date().toISOString())
+          : new Date().toISOString(),
+        // Ensure updated_at is a proper date string
+        updated_at: order.updatedAt 
+          ? (typeof order.updatedAt === 'string' 
+              ? order.updatedAt 
+              : order.updatedAt instanceof Date 
+                ? order.updatedAt.toISOString() 
+                : new Date().toISOString())
+          : new Date().toISOString(),
       };
       
       console.log("Normalized order data:", normalizedOrder);
@@ -549,22 +574,35 @@ export const storage = {
     }
   },
   
-  async updateOrderStatus(id: number, status: string, expectedDeliveryDate?: Date | null) {
-    const updateData: any = {
-      status, 
-      updatedAt: new Date()
-    };
-    
-    // Only set expected delivery date if provided
-    if (expectedDeliveryDate !== undefined) {
-      updateData.expectedDeliveryDate = expectedDeliveryDate;
+  async updateOrderStatus(id: number, status: string, expectedDeliveryDate?: Date | string | null) {
+    try {
+      // Format all dates consistently
+      const updateData: any = {
+        status, 
+        updated_at: new Date().toISOString()
+      };
+      
+      // Only set expected delivery date if provided, and ensure it's a string
+      if (expectedDeliveryDate !== undefined) {
+        updateData.expectedDeliveryDate = typeof expectedDeliveryDate === 'string'
+          ? expectedDeliveryDate
+          : expectedDeliveryDate instanceof Date
+            ? expectedDeliveryDate.toISOString()
+            : null;
+      }
+      
+      console.log(`Updating order ${id} with status: ${status} and date: ${updateData.expectedDeliveryDate}`);
+      
+      const [updatedOrder] = await db.update(schema.orders)
+        .set(updateData)
+        .where(eq(schema.orders.id, id))
+        .returning();
+      
+      return updatedOrder;
+    } catch (error) {
+      console.error(`Error updating order status for order ${id}:`, error);
+      throw error;
     }
-    
-    const [updatedOrder] = await db.update(schema.orders)
-      .set(updateData)
-      .where(eq(schema.orders.id, id))
-      .returning();
-    return updatedOrder;
   },
   
   // Dashboard stats
