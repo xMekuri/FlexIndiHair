@@ -207,6 +207,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const {
         active,
         categoryId,
+        category, // Add support for filtering by category slug
         featured,
         search,
         page = "1",
@@ -231,6 +232,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (categoryId) {
         params.categoryId = parseInt(categoryId as string);
+      }
+      
+      // Support filtering by category slug
+      if (category) {
+        params.category = category as string;
       }
       
       if (featured !== undefined) {
