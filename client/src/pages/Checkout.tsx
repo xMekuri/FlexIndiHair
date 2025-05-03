@@ -109,6 +109,8 @@ export default function Checkout() {
   
   // Handle form submission
   const onSubmit = async (data: z.infer<typeof checkoutFormSchema>) => {
+    console.log("Form submission started", { data, step });
+    
     if (items.length === 0) {
       toast({
         title: "Cart is empty",
