@@ -241,7 +241,17 @@ export default function EditProduct() {
       if (!response.ok) {
         const error = await response.json();
         console.error('Product update error:', error);
-        throw new Error(error.message || error.errors?.[0]?.message || 'Failed to update product');
+        let errorMessage = 'Failed to update product';
+        
+        if (error.message) {
+          // Simple error message
+          errorMessage = error.message;
+        } else if (error.errors && Array.isArray(error.errors) && error.errors.length > 0) {
+          // ZodError format
+          errorMessage = error.errors.map((err: any) => err.message).join(', ');
+        }
+        
+        throw new Error(errorMessage);
       }
       
       return response.json();
