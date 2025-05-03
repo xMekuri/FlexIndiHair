@@ -912,48 +912,73 @@ export default function Checkout() {
                             className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border-yellow-300"
                             onClick={async () => {
                               console.log("Debug button clicked");
+                              
+                              // First check if the form is valid before proceeding
+                              const result = await form.trigger();
+                              if (!result) {
+                                toast({
+                                  title: "Form validation failed",
+                                  description: "Please fill out all required fields before proceeding.",
+                                  variant: "destructive",
+                                });
+                                return;
+                              }
+                              
+                              // Get the form values
+                              const formData = form.getValues();
+                              
                               try {
-                                // Create a basic order directly with the API
+                                // Create the order using the actual form data
                                 const debugOrderData = {
                                   // Use both user_id and customerId for compatibility
                                   user_id: customer?.id,
                                   customerId: customer?.id,
-                                  firstName: "Test",
-                                  lastName: "User",
-                                  email: "test@example.com",
-                                  phone: "1234567890",
-                                  address: "123 Test St",
-                                  city: "Test City",
-                                  state: "TS",
-                                  zipCode: "12345",
-                                  country: "United States",
+                                  firstName: formData.firstName,
+                                  lastName: formData.lastName,
+                                  email: formData.email,
+                                  phone: formData.phone,
+                                  address: formData.address,
+                                  city: formData.city,
+                                  state: formData.state,
+                                  zipCode: formData.zipCode,
+                                  country: formData.country,
                                   shippingAddress: {
-                                    firstName: "Test",
-                                    lastName: "User",
-                                    address: "123 Test St",
-                                    city: "Test City",
-                                    state: "TS",
-                                    zipCode: "12345",
-                                    country: "United States",
+                                    firstName: formData.firstName,
+                                    lastName: formData.lastName,
+                                    address: formData.address,
+                                    city: formData.city,
+                                    state: formData.state,
+                                    zipCode: formData.zipCode,
+                                    country: formData.country,
                                   },
-                                  billingAddress: {
-                                    firstName: "Test",
-                                    lastName: "User",
-                                    address: "123 Test St",
-                                    city: "Test City",
-                                    state: "TS",
-                                    zipCode: "12345",
-                                    country: "United States",
-                                  },
+                                  billingAddress: formData.sameAsBilling
+                                    ? {
+                                        firstName: formData.firstName,
+                                        lastName: formData.lastName,
+                                        address: formData.address,
+                                        city: formData.city,
+                                        state: formData.state,
+                                        zipCode: formData.zipCode,
+                                        country: formData.country,
+                                      }
+                                    : {
+                                        firstName: formData.billingFirstName || "",
+                                        lastName: formData.billingLastName || "",
+                                        address: formData.billingAddress || "",
+                                        city: formData.billingCity || "",
+                                        state: formData.billingState || "",
+                                        zipCode: formData.billingZipCode || "",
+                                        country: formData.billingCountry || "",
+                                      },
                                   subtotal: subtotal,
                                   tax: tax,
                                   shipping: shippingFee,
                                   total: total,
-                                  paymentMethod: "credit_card",
+                                  paymentMethod: formData.paymentMethod,
                                   paymentStatus: "pending",
-                                  notes: "Debug order",
+                                  notes: formData.notes || "Order created through checkout",
                                   status: "pending",
-                                  // expectedDeliveryDate removed as it doesn't exist in the database schema
+                                  // No expected delivery date (column doesn't exist)
                                 };
                                 
                                 const debugOrderItems = items.map(item => ({
@@ -964,22 +989,24 @@ export default function Checkout() {
                                   totalPrice: item.price * item.quantity,
                                 }));
                                 
-                                console.log("Sending debug order directly to API");
+                                console.log("Sending order directly to API");
                                 const response = await apiRequest('POST', '/api/orders', {
                                   orderData: debugOrderData,
                                   orderItems: debugOrderItems,
                                 });
                                 
-                                console.log("Debug order response:", response);
+                                console.log("Order response:", response);
                                 if (!response.ok) {
-                                  throw new Error(`API error: ${response.status}`);
+                                  const errorText = await response.text();
+                                  console.error("Order API error response:", errorText);
+                                  throw new Error(`Failed to create order: ${response.status} ${response.statusText}`);
                                 }
                                 
                                 const orderResult = await response.json();
-                                console.log("Debug order created:", orderResult);
+                                console.log("Order created:", orderResult);
                                 
                                 toast({
-                                  title: "Debug order created",
+                                  title: "Order created",
                                   description: `Order ID: ${orderResult.id}`,
                                 });
                                 
@@ -988,16 +1015,16 @@ export default function Checkout() {
                                 // Redirect to order confirmation
                                 navigate(`/order-confirmation?id=${orderResult.id}`);
                               } catch (error) {
-                                console.error("Debug order error:", error);
+                                console.error("Order error:", error);
                                 toast({
-                                  title: "Debug order failed",
+                                  title: "Order failed",
                                   description: String(error),
                                   variant: "destructive",
                                 });
                               }
                             }}
                           >
-                            Debug Order
+                            Create Order
                           </Button>
                           <Button 
                             type="submit" 
