@@ -143,6 +143,57 @@ export default function EditProduct() {
     }
   }, [product, form]);
   
+  // Create new product mutation
+  const createProduct = useMutation({
+    mutationFn: async (data: ProductFormValues) => {
+      // Get admin token from localStorage
+      const token = localStorage.getItem('admin_token');
+      
+      // Convert boolean values to strings for the API
+      const formattedData = {
+        ...data,
+        isActive: data.isActive ? "true" : "false",
+        isFeatured: data.isFeatured ? "true" : "false",
+        isBestSeller: data.isBestSeller ? "true" : "false",
+        isNew: data.isNew ? "true" : "false",
+        isOnSale: data.isOnSale ? "true" : "false",
+      };
+      
+      console.log("Sending product create data:", formattedData);
+      
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(formattedData),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to create product');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      toast({
+        title: "Success",
+        description: "Product created successfully",
+      });
+      navigate("/admin/products");
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create product",
+        variant: "destructive",
+      });
+    },
+  });
+
   // Update mutation
   const updateProduct = useMutation({
     mutationFn: async (data: ProductFormValues) => {
@@ -194,17 +245,25 @@ export default function EditProduct() {
     },
   });
   
+  // Check if we are in "new product" mode
+  const isNewProduct = !id || id === 'new';
+  
   // Form submission handler
   async function onSubmit(data: ProductFormValues) {
     setIsSubmitting(true);
     try {
-      await updateProduct.mutateAsync(data);
+      if (isNewProduct) {
+        await createProduct.mutateAsync(data);
+      } else {
+        await updateProduct.mutateAsync(data);
+      }
     } finally {
       setIsSubmitting(false);
     }
   }
   
-  if (isProductLoading || isCategoriesLoading) {
+  // Only show loading if we're fetching an existing product or categories
+  if ((isProductLoading && !isNewProduct) || isCategoriesLoading) {
     return (
       <div className="flex items-center justify-center p-12">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -221,8 +280,12 @@ export default function EditProduct() {
       
       <Card>
         <CardHeader>
-          <CardTitle>Edit Product</CardTitle>
-          <CardDescription>Make changes to the product information here.</CardDescription>
+          <CardTitle>{isNewProduct ? "Add New Product" : "Edit Product"}</CardTitle>
+          <CardDescription>
+            {isNewProduct 
+              ? "Create a new product by filling out the form below."
+              : "Make changes to the product information here."}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -510,12 +573,12 @@ export default function EditProduct() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
+                    {isNewProduct ? "Creating..." : "Saving..."}
                   </>
                 ) : (
                   <>
                     <Save className="mr-2 h-4 w-4" />
-                    Save Changes
+                    {isNewProduct ? "Create Product" : "Save Changes"}
                   </>
                 )}
               </Button>
