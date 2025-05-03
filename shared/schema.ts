@@ -86,7 +86,7 @@ export const productReviews = pgTable("product_reviews", {
 // Order-related tables
 export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
-  customerId: integer("customer_id").references(() => customers.id),
+  user_id: integer("user_id").references(() => customers.id),
   orderNumber: text("order_number"),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
@@ -150,7 +150,7 @@ export const customersRelations = relations(customers, ({ many }) => ({
 export const ordersRelations = relations(orders, ({ many, one }) => ({
   orderItems: many(orderItems),
   customer: one(customers, {
-    fields: [orders.customerId],
+    fields: [orders.user_id],
     references: [customers.id],
   }),
 }));

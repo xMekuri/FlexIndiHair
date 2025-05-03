@@ -439,7 +439,7 @@ export const storage = {
     }
     
     if (params?.customerId) {
-      query = query.where(eq(schema.orders.customerId, params.customerId));
+      query = query.where(eq(schema.orders.user_id, params.customerId));
     }
     
     if (params?.startDate) {
@@ -475,7 +475,7 @@ export const storage = {
     }
     
     if (params?.customerId) {
-      countFiltered = countFiltered.where(eq(schema.orders.customerId, params.customerId));
+      countFiltered = countFiltered.where(eq(schema.orders.user_id, params.customerId));
     }
     
     if (params?.startDate) {
