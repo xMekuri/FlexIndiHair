@@ -94,7 +94,11 @@ export default function Checkout() {
       paymentMethod: "credit_card",
       notes: "",
     },
+    mode: "onSubmit", // Change validation mode to only validate on submit
   });
+  
+  // Log any form validation errors
+  console.log("Form errors:", form.formState.errors);
   
   // Handle step navigation
   const nextStep = () => {
@@ -109,7 +113,13 @@ export default function Checkout() {
   
   // Handle form submission
   const onSubmit = async (data: z.infer<typeof checkoutFormSchema>) => {
-    console.log("Form submission started", { data, step });
+    console.log("FORM SUBMISSION STARTED", { data, step });
+    
+    // Show a toast to verify the function is being called
+    toast({
+      title: "Processing order",
+      description: "Your order is being processed...",
+    });
     
     if (items.length === 0) {
       toast({
@@ -893,20 +903,124 @@ export default function Checkout() {
                         <Button type="button" variant="outline" onClick={prevStep}>
                           Back to Payment
                         </Button>
-                        <Button 
-                          type="submit" 
-                          className="bg-primary hover:bg-primary/90"
-                          disabled={isSubmitting}
-                        >
-                          {isSubmitting ? (
-                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> 
-                              Processing...
-                            </>
-                          ) : (
-                            'Complete Order'
-                          )}
-                        </Button>
+                        <div className="space-x-2">
+                          <Button 
+                            type="button"
+                            variant="outline"
+                            className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border-yellow-300"
+                            onClick={async () => {
+                              console.log("Debug button clicked");
+                              try {
+                                // Create a basic order directly with the API
+                                const debugOrderData = {
+                                  customerId: customer?.id,
+                                  firstName: "Test",
+                                  lastName: "User",
+                                  email: "test@example.com",
+                                  phone: "1234567890",
+                                  address: "123 Test St",
+                                  city: "Test City",
+                                  state: "TS",
+                                  zipCode: "12345",
+                                  country: "United States",
+                                  shippingAddress: {
+                                    firstName: "Test",
+                                    lastName: "User",
+                                    address: "123 Test St",
+                                    city: "Test City",
+                                    state: "TS",
+                                    zipCode: "12345",
+                                    country: "United States",
+                                  },
+                                  billingAddress: {
+                                    firstName: "Test",
+                                    lastName: "User",
+                                    address: "123 Test St",
+                                    city: "Test City",
+                                    state: "TS",
+                                    zipCode: "12345",
+                                    country: "United States",
+                                  },
+                                  subtotal: subtotal,
+                                  tax: tax,
+                                  shipping: shippingFee,
+                                  total: total,
+                                  paymentMethod: "credit_card",
+                                  paymentStatus: "pending",
+                                  notes: "Debug order",
+                                  status: "pending",
+                                  expectedDeliveryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+                                };
+                                
+                                const debugOrderItems = items.map(item => ({
+                                  productId: item.id,
+                                  quantity: item.quantity,
+                                  price: item.price,
+                                  name: item.name,
+                                  totalPrice: item.price * item.quantity,
+                                }));
+                                
+                                console.log("Sending debug order directly to API");
+                                const response = await apiRequest('POST', '/api/orders', {
+                                  orderData: debugOrderData,
+                                  orderItems: debugOrderItems,
+                                });
+                                
+                                console.log("Debug order response:", response);
+                                if (!response.ok) {
+                                  throw new Error(`API error: ${response.status}`);
+                                }
+                                
+                                const orderResult = await response.json();
+                                console.log("Debug order created:", orderResult);
+                                
+                                toast({
+                                  title: "Debug order created",
+                                  description: `Order ID: ${orderResult.id}`,
+                                });
+                                
+                                clearCart();
+                                
+                                // Redirect to order confirmation
+                                navigate(`/order-confirmation?id=${orderResult.id}`);
+                              } catch (error) {
+                                console.error("Debug order error:", error);
+                                toast({
+                                  title: "Debug order failed",
+                                  description: String(error),
+                                  variant: "destructive",
+                                });
+                              }
+                            }}
+                          >
+                            Debug Order
+                          </Button>
+                          <Button 
+                            type="submit" 
+                            className="bg-primary hover:bg-primary/90"
+                            disabled={isSubmitting}
+                            onClick={() => {
+                              console.log("Complete Order button clicked");
+                              const formData = form.getValues();
+                              console.log("Form data:", formData);
+                              toast({
+                                title: "Button clicked",
+                                description: "Attempting to process order...",
+                              });
+                              // Try manual submission
+                              form.handleSubmit(onSubmit)();
+                            }}
+                          >
+                            {isSubmitting ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> 
+                                Processing...
+                              </>
+                            ) : (
+                              'Complete Order'
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   )}
