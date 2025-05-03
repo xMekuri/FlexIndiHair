@@ -149,9 +149,12 @@ export default function EditProduct() {
       // Get admin token from localStorage
       const token = localStorage.getItem('admin_token');
       
-      // Convert boolean values to strings for the API
+      // Convert and format values for the API
       const formattedData = {
         ...data,
+        // Convert stockQuantity to stock since server expects "stock"
+        stock: data.stockQuantity,
+        // Convert boolean values to strings for the API
         isActive: data.isActive ? "true" : "false",
         isFeatured: data.isFeatured ? "true" : "false",
         isBestSeller: data.isBestSeller ? "true" : "false",
@@ -172,7 +175,8 @@ export default function EditProduct() {
       
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || 'Failed to create product');
+        console.error('Product creation error:', error);
+        throw new Error(error.message || error.errors?.[0]?.message || 'Failed to create product');
       }
       
       return response.json();
@@ -200,9 +204,12 @@ export default function EditProduct() {
       // Get admin token from localStorage
       const token = localStorage.getItem('admin_token');
       
-      // Convert boolean values to strings for the API
+      // Convert and format values for the API
       const formattedData = {
         ...data,
+        // Convert stockQuantity to stock since server expects "stock"
+        stock: data.stockQuantity,
+        // Convert boolean values to strings for the API
         isActive: data.isActive ? "true" : "false",
         isFeatured: data.isFeatured ? "true" : "false",
         isBestSeller: data.isBestSeller ? "true" : "false",
@@ -223,7 +230,8 @@ export default function EditProduct() {
       
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || 'Failed to update product');
+        console.error('Product update error:', error);
+        throw new Error(error.message || error.errors?.[0]?.message || 'Failed to update product');
       }
       
       return response.json();
