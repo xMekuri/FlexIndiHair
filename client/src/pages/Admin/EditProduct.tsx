@@ -143,13 +143,25 @@ export default function EditProduct() {
       // Get admin token from localStorage
       const token = localStorage.getItem('admin_token');
       
+      // Convert boolean values to strings for the API
+      const formattedData = {
+        ...data,
+        isActive: data.isActive ? "true" : "false",
+        isFeatured: data.isFeatured ? "true" : "false",
+        isBestSeller: data.isBestSeller ? "true" : "false",
+        isNew: data.isNew ? "true" : "false",
+        isOnSale: data.isOnSale ? "true" : "false",
+      };
+      
+      console.log("Sending product update data:", formattedData);
+      
       const response = await fetch(`/api/products/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formattedData),
       });
       
       if (!response.ok) {
