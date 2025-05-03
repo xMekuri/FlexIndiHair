@@ -66,7 +66,8 @@ export const storage = {
   // Product functions
   async getAllProducts(params?: {
     active?: boolean, 
-    categoryId?: number, 
+    categoryId?: number,
+    category?: string, // Category slug
     featured?: boolean,
     search?: string,
     limit?: number,
@@ -82,6 +83,19 @@ export const storage = {
     
     if (params?.categoryId) {
       query = query.where(eq(schema.products.categoryId, params.categoryId));
+    }
+    
+    // Filter by category slug if provided
+    if (params?.category) {
+      // First find the category id from the slug
+      const category = await db.select()
+        .from(schema.categories)
+        .where(eq(schema.categories.slug, params.category))
+        .limit(1);
+      
+      if (category.length > 0) {
+        query = query.where(eq(schema.products.categoryId, category[0].id));
+      }
     }
     
     if (params?.featured) {
@@ -138,6 +152,19 @@ export const storage = {
     
     if (params?.categoryId) {
       countFiltered = countFiltered.where(eq(schema.products.categoryId, params.categoryId));
+    }
+    
+    // We already found the category id above, so we use the same condition for both queries
+    if (params?.category && !params?.categoryId) {
+      // Look up the category by slug
+      const category = await db.select()
+        .from(schema.categories)
+        .where(eq(schema.categories.slug, params.category))
+        .limit(1);
+      
+      if (category.length > 0) {
+        countFiltered = countFiltered.where(eq(schema.products.categoryId, category[0].id));
+      }
     }
     
     if (params?.featured) {
