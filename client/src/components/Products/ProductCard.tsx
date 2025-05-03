@@ -38,7 +38,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       name: product.name,
       price,
       quantity: 1,
-      mainImageUrl: product.mainImageUrl,
+      mainImageUrl: product.mainImageUrl || product.imageUrl,
     });
     
     toast({
@@ -57,7 +57,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="relative">
           <div 
             className="w-full h-64 bg-cover bg-center transition duration-300"
-            style={{ backgroundImage: `url(${product.mainImageUrl})` }}
+            style={{ backgroundImage: `url(${product.mainImageUrl || product.imageUrl})` }}
           ></div>
           
           {product.isNew && (

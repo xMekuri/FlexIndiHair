@@ -299,9 +299,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Add main image if uploaded
       if (req.file) {
-        productData.mainImageUrl = `/uploads/${req.file.filename}`;
+        productData.imageUrl = `/uploads/${req.file.filename}`;
+      }
+      
+      // Handle imageUrl field from the form
+      if (productData.imageUrl) {
+        // Keep the imageUrl (which matches our database schema)
+        productData.imageUrl = productData.imageUrl;
       }
 
+      console.log("Creating product with data:", productData);
       const product = await storage.createProduct(productData);
       res.status(201).json(product);
     })
@@ -330,9 +337,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Add main image if uploaded
       if (req.file) {
-        productData.mainImageUrl = `/uploads/${req.file.filename}`;
+        productData.imageUrl = `/uploads/${req.file.filename}`;
+      }
+      
+      // Handle imageUrl field from the form
+      if (productData.imageUrl) {
+        // Keep the imageUrl (which matches our database schema)
+        productData.imageUrl = productData.imageUrl;
       }
 
+      console.log("Updating product with data:", productData);
       const product = await storage.updateProduct(id, productData);
       if (!product) {
         return res.status(404).json({ message: "Product not found" });
