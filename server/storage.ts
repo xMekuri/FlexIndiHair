@@ -1,6 +1,6 @@
 import { db } from "@db";
 import * as schema from "@shared/schema";
-import { eq, and, or, desc, asc, like, gte, lte, isNull, sql } from "drizzle-orm";
+import { eq, and, or, desc, asc, like, gte, lte, isNull, sql, inArray } from "drizzle-orm";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 
@@ -94,7 +94,28 @@ export const storage = {
         .limit(1);
       
       if (category.length > 0) {
-        query = query.where(eq(schema.products.categoryId, category[0].id));
+        const categoryId = category[0].id;
+        
+        // Check if this is a main category (parent category)
+        // If so, we need to get all subcategories and include their products too
+        const subcategories = await db.select()
+          .from(schema.categories)
+          .where(eq(schema.categories.parent_id, categoryId));
+        
+        if (subcategories.length > 0) {
+          // This is a parent category with subcategories
+          // Get products from both the parent category and all its subcategories
+          const subcategoryIds = subcategories.map(subcat => subcat.id);
+          query = query.where(
+            or(
+              eq(schema.products.categoryId, categoryId),
+              inArray(schema.products.categoryId, subcategoryIds)
+            )
+          );
+        } else {
+          // This is a subcategory or a category without subcategories
+          query = query.where(eq(schema.products.categoryId, categoryId));
+        }
       }
     }
     
@@ -163,7 +184,26 @@ export const storage = {
         .limit(1);
       
       if (category.length > 0) {
-        countFiltered = countFiltered.where(eq(schema.products.categoryId, category[0].id));
+        const categoryId = category[0].id;
+        
+        // Check if this is a main category with subcategories
+        const subcategories = await db.select()
+          .from(schema.categories)
+          .where(eq(schema.categories.parent_id, categoryId));
+        
+        if (subcategories.length > 0) {
+          // This is a parent category with subcategories
+          const subcategoryIds = subcategories.map(subcat => subcat.id);
+          countFiltered = countFiltered.where(
+            or(
+              eq(schema.products.categoryId, categoryId),
+              inArray(schema.products.categoryId, subcategoryIds)
+            )
+          );
+        } else {
+          // This is a subcategory or a category without subcategories
+          countFiltered = countFiltered.where(eq(schema.products.categoryId, categoryId));
+        }
       }
     }
     
