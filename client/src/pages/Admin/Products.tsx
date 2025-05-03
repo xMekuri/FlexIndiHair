@@ -250,7 +250,7 @@ export default function AdminProducts() {
                           <div className="w-10 h-10 relative overflow-hidden rounded">
                             <div 
                               className="absolute inset-0 bg-cover bg-center"
-                              style={{ backgroundImage: `url(${product.mainImageUrl})` }}
+                              style={{ backgroundImage: `url(${product.mainImageUrl || product.imageUrl})` }}
                             ></div>
                           </div>
                         </TableCell>
@@ -264,8 +264,8 @@ export default function AdminProducts() {
                             : Number(product.price).toFixed(2)}
                         </TableCell>
                         <TableCell>
-                          <span className={product.stock <= 5 ? "text-red-500 font-medium" : ""}>
-                            {product.stock}
+                          <span className={product.stockQuantity <= 5 ? "text-red-500 font-medium" : ""}>
+                            {product.stockQuantity}
                           </span>
                         </TableCell>
                         <TableCell>

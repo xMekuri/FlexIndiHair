@@ -79,10 +79,15 @@ export default function EditProduct() {
     },
   });
   
-  // Fetch product data
+  // Fetch product data (only if id is provided and we're in edit mode)
   const { data: product, isLoading: isProductLoading } = useQuery({
     queryKey: ['/api/products', id],
     queryFn: async () => {
+      // Skip fetching for new products
+      if (!id || id === 'new') {
+        return null;
+      }
+      
       // Get admin token from localStorage
       const token = localStorage.getItem('admin_token');
       
@@ -94,6 +99,7 @@ export default function EditProduct() {
       if (!response.ok) throw new Error('Failed to fetch product');
       return response.json();
     },
+    enabled: !!id && id !== 'new', // Only run query if id exists and is not 'new'
   });
   
   // Form setup

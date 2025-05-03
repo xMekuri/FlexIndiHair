@@ -130,6 +130,9 @@ function Router() {
       <Route path="/admin/products">
         {() => <ProtectedAdminRoute component={AdminProducts} />}
       </Route>
+      <Route path="/admin/products/new">
+        {() => <ProtectedAdminRoute component={EditProduct} />}
+      </Route>
       <Route path="/admin/products/:id/edit">
         {() => <ProtectedAdminRoute component={EditProduct} />}
       </Route>
