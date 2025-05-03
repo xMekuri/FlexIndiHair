@@ -36,9 +36,7 @@ export const categories = pgTable("categories", {
   slug: text("slug").notNull().unique(),
   description: text("description"),
   imageUrl: text("image_url"),
-  isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const products = pgTable("products", {
@@ -46,18 +44,25 @@ export const products = pgTable("products", {
   name: text("name").notNull(),
   slug: text("slug").notNull().unique(),
   description: text("description").notNull(),
+  longDescription: text("long_description"),
+  ingredients: text("ingredients"),
+  howToUse: text("how_to_use"),
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
-  compareAtPrice: decimal("compare_at_price", { precision: 10, scale: 2 }),
+  originalPrice: decimal("original_price", { precision: 10, scale: 2 }),
   sku: text("sku").notNull(),
-  stock: integer("stock").notNull(),
-  mainImageUrl: text("main_image_url").notNull(),
+  imageUrl: text("image_url").notNull(),
   categoryId: integer("category_id").references(() => categories.id).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   isFeatured: boolean("is_featured").default(false).notNull(),
+  isBestSeller: boolean("is_best_seller").default(false).notNull(),
   isNew: boolean("is_new").default(false).notNull(),
   isOnSale: boolean("is_on_sale").default(false).notNull(),
+  hairType: text("hair_type"),
+  concerns: text("concerns"),
+  rating: decimal("rating", { precision: 3, scale: 1 }),
+  reviewCount: integer("review_count").default(0),
+  stockQuantity: integer("stock_quantity").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const productImages = pgTable("product_images", {
