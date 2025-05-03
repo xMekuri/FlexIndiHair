@@ -227,7 +227,8 @@ export default function AuthPage() {
               <div className="text-sm text-muted-foreground">
                 Don't have an account? <a href="#register" className="text-primary hover:underline" onClick={(e) => {
                   e.preventDefault();
-                  document.querySelector('[data-value="register"]')?.click();
+                  const registerTab = document.querySelector('[data-value="register"]') as HTMLElement;
+                  if (registerTab) registerTab.click();
                 }}>Register</a>
               </div>
               <div className="text-sm">
@@ -335,7 +336,8 @@ export default function AuthPage() {
               <div className="text-sm text-muted-foreground">
                 Already have an account? <a href="#login" className="text-primary hover:underline" onClick={(e) => {
                   e.preventDefault();
-                  document.querySelector('[data-value="login"]')?.click();
+                  const loginTab = document.querySelector('[data-value="login"]') as HTMLElement;
+                  if (loginTab) loginTab.click();
                 }}>Login</a>
               </div>
             </CardFooter>
