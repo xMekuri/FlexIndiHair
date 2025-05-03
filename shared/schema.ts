@@ -216,13 +216,13 @@ export const orderInsertSchema = createInsertSchema(orders, {
   // Handle createdAt
   createdAt: z.preprocess(
     (val) => {
-      // If the value is already a string, just return it
+      // If the value is already a string, return it
       if (typeof val === 'string') return val;
       
       // If it's a Date object, convert to ISO string
       if (val instanceof Date) return val.toISOString();
       
-      // Default to current time as ISO string
+      // Ensure we have a valid date (even if undefined/null)
       return new Date().toISOString();
     },
     z.string().optional()

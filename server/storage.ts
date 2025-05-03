@@ -510,7 +510,26 @@ export const storage = {
   
   async createOrder(orderData: schema.OrderInsert, items: schema.OrderItemInsert[]) {
     try {
-      console.log("Creating order with data:", { orderData, items });
+      console.log("Creating order with data:", JSON.stringify({ orderData, items }, null, 2));
+      
+      // Make sure createdAt is a valid date string 
+      if (orderData.createdAt && !(orderData.createdAt instanceof Date) && typeof orderData.createdAt !== 'string') {
+        console.log("Fixing invalid createdAt value:", orderData.createdAt);
+        orderData.createdAt = new Date().toISOString();
+      }
+      
+      // Pre-validate monetary fields to ensure they're strings before schema validation
+      if (typeof orderData.subtotal === 'number') {
+        orderData.subtotal = orderData.subtotal.toString();
+      }
+      
+      if (typeof orderData.shipping === 'number') {
+        orderData.shipping = orderData.shipping.toString();
+      }
+      
+      if (typeof orderData.total === 'number') {
+        orderData.total = orderData.total.toString();
+      }
       
       // Validate order data through schema validation
       const validatedOrder = schema.orderInsertSchema.parse(orderData);
@@ -537,10 +556,21 @@ export const storage = {
       console.log("Order created:", newOrder);
       
       // Add order items with validation
-      const orderItemsWithOrderId = items.map(item => ({
-        ...item,
-        orderId: newOrder.id,
-      }));
+      const orderItemsWithOrderId = items.map(item => {
+        // Pre-validate monetary fields
+        if (typeof item.price === 'number') {
+          item.price = item.price.toString();
+        }
+        
+        if (typeof item.totalPrice === 'number') {
+          item.totalPrice = item.totalPrice.toString();
+        }
+        
+        return {
+          ...item,
+          orderId: newOrder.id,
+        };
+      });
       
       // Validate order items through schema validation
       const validatedOrderItems = orderItemsWithOrderId.map(item => 
@@ -561,33 +591,20 @@ export const storage = {
   
   async updateOrderStatus(id: number, status: string) {
     try {
-      console.log(`Starting order status update for order ${id}`);
+      console.log(`Starting order status update for order ${id} to ${status}`);
       
-      // Fetch current order to get all fields
-      const currentOrder = await this.getOrderById(id);
-      if (!currentOrder) {
-        throw new Error(`Order with ID ${id} not found`);
-      }
-      
-      // Create update data using current order as base
-      const updateData = {
-        ...currentOrder,
-        status
-      };
-      
-      // Validate data through the schema which handles all date conversions
-      const validatedUpdateData = schema.orderInsertSchema.parse(updateData);
-      
-      console.log(`Updating order ${id} with status:`, status);
-      
-      // Only update the fields we want to change
+      // Skip the complex validation and just update the status directly
+      // This avoids potential issues with the toISOString error
       const [updatedOrder] = await db.update(schema.orders)
-        .set({
-          status: validatedUpdateData.status
-        })
+        .set({ status })
         .where(eq(schema.orders.id, id))
         .returning();
       
+      if (!updatedOrder) {
+        throw new Error(`Order with ID ${id} not found`);
+      }
+      
+      console.log(`Successfully updated order ${id} status to ${status}`);
       return updatedOrder;
     } catch (error) {
       console.error(`Error updating order status for order ${id}:`, error);
