@@ -295,7 +295,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ...req.body,
         price: parseFloat(req.body.price),
         compareAtPrice: req.body.compareAtPrice ? parseFloat(req.body.compareAtPrice) : null,
-        stock: parseInt(req.body.stock),
+        // Use stockQuantity or fallback to stock for backward compatibility
+        stockQuantity: req.body.stockQuantity ? parseInt(req.body.stockQuantity) : 
+                      (req.body.stock ? parseInt(req.body.stock) : 0),
         categoryId: parseInt(req.body.categoryId),
         isActive: req.body.isActive === "true",
         isFeatured: req.body.isFeatured === "true",
