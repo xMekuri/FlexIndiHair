@@ -99,14 +99,12 @@ export const orders = pgTable("orders", {
   country: text("country").notNull(),
   orderNotes: text("order_notes"),
   status: text("status").notNull().default("pending"), // pending, processing, out_for_delivery, delivered, cancelled
-  expectedDeliveryDate: timestamp("expected_delivery_date"),
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
   shipping: decimal("shipping", { precision: 10, scale: 2 }).notNull(),
   total: decimal("total", { precision: 10, scale: 2 }).notNull(),
   paymentMethod: text("payment_method").notNull(),
   paymentStatus: text("payment_status").notNull().default("pending"), // pending, paid, failed
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const orderItems = pgTable("order_items", {
@@ -215,32 +213,16 @@ export const productReviewInsertSchema = createInsertSchema(productReviews);
 
 // Custom order insert schema with date handling and numeric conversions
 export const orderInsertSchema = createInsertSchema(orders, {
-  // Transform expected delivery date to string format
-  expectedDeliveryDate: z.preprocess(
-    (val) => {
-      if (!val) return null;
-      if (typeof val === 'string') return val;
-      if (val instanceof Date) return val.toISOString();
-      return null;
-    },
-    z.string().nullable().optional()
-  ),
-  // Transform created at to string format
+  // Handle createdAt
   createdAt: z.preprocess(
     (val) => {
-      if (!val) return new Date().toISOString();
+      // If the value is already a string, just return it
       if (typeof val === 'string') return val;
+      
+      // If it's a Date object, convert to ISO string
       if (val instanceof Date) return val.toISOString();
-      return new Date().toISOString();
-    },
-    z.string().optional()
-  ),
-  // Transform updated at to string format
-  updatedAt: z.preprocess(
-    (val) => {
-      if (!val) return new Date().toISOString();
-      if (typeof val === 'string') return val;
-      if (val instanceof Date) return val.toISOString();
+      
+      // Default to current time as ISO string
       return new Date().toISOString();
     },
     z.string().optional()

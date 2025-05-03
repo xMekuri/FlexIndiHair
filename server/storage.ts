@@ -559,7 +559,7 @@ export const storage = {
     }
   },
   
-  async updateOrderStatus(id: number, status: string, expectedDeliveryDate?: Date | string | null) {
+  async updateOrderStatus(id: number, status: string) {
     try {
       console.log(`Starting order status update for order ${id}`);
       
@@ -572,30 +572,18 @@ export const storage = {
       // Create update data using current order as base
       const updateData = {
         ...currentOrder,
-        status,
-        updatedAt: new Date().toISOString(),
-        expectedDeliveryDate: undefined
+        status
       };
-      
-      // Only set expected delivery date if provided
-      if (expectedDeliveryDate !== undefined) {
-        updateData.expectedDeliveryDate = expectedDeliveryDate;
-      }
       
       // Validate data through the schema which handles all date conversions
       const validatedUpdateData = schema.orderInsertSchema.parse(updateData);
       
-      console.log(`Updating order ${id} with:`, {
-        status,
-        expectedDeliveryDate: validatedUpdateData.expectedDeliveryDate
-      });
+      console.log(`Updating order ${id} with status:`, status);
       
       // Only update the fields we want to change
       const [updatedOrder] = await db.update(schema.orders)
         .set({
-          status: validatedUpdateData.status,
-          updatedAt: validatedUpdateData.updatedAt,
-          expectedDeliveryDate: validatedUpdateData.expectedDeliveryDate
+          status: validatedUpdateData.status
         })
         .where(eq(schema.orders.id, id))
         .returning();
