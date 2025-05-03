@@ -86,7 +86,7 @@ export const productReviews = pgTable("product_reviews", {
 // Order-related tables
 export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id"),
+  customerId: integer("customer_id").references(() => customers.id),
   orderNumber: text("order_number"),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
@@ -98,13 +98,15 @@ export const orders = pgTable("orders", {
   zipCode: text("zip_code").notNull(),
   country: text("country").notNull(),
   orderNotes: text("order_notes"),
-  status: text("status").notNull().default("pending"), // pending, processing, shipped, delivered, cancelled
+  status: text("status").notNull().default("pending"), // pending, processing, out_for_delivery, delivered, cancelled
+  expectedDeliveryDate: timestamp("expected_delivery_date"),
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
   shipping: decimal("shipping", { precision: 10, scale: 2 }).notNull(),
   total: decimal("total", { precision: 10, scale: 2 }).notNull(),
   paymentMethod: text("payment_method").notNull(),
   paymentStatus: text("payment_status").notNull().default("pending"), // pending, paid, failed
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const orderItems = pgTable("order_items", {
@@ -145,8 +147,12 @@ export const customersRelations = relations(customers, ({ many }) => ({
   productReviews: many(productReviews),
 }));
 
-export const ordersRelations = relations(orders, ({ many }) => ({
+export const ordersRelations = relations(orders, ({ many, one }) => ({
   orderItems: many(orderItems),
+  customer: one(customers, {
+    fields: [orders.customerId],
+    references: [customers.id],
+  }),
 }));
 
 export const orderItemsRelations = relations(orderItems, ({ one }) => ({
