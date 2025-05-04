@@ -515,7 +515,7 @@ export const storage = {
       // Create a direct insert object without relying on schema validation for timestamps
       // This ensures we don't trigger the toISOString error
       const orderInsertData = {
-        user_id: orderData.customerId || orderData.user_id,
+        user_id: null, // Allow guest checkout
         order_number: orderData.orderNumber || `ORD-${Date.now()}`,
         first_name: orderData.firstName,
         last_name: orderData.lastName,
