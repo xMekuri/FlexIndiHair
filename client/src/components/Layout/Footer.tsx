@@ -1,107 +1,85 @@
-import { Link } from "wouter";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { FaFacebookF, FaInstagram, FaTiktok, FaPinterestP, FaYoutube } from "react-icons/fa";
+import { Link } from 'wouter';
+import { Facebook, Instagram, Twitter, Github } from 'lucide-react';
 
-export default function Footer() {
+const Footer = () => {
   return (
-    <footer className="bg-darkgray text-white pt-16 pb-8">
+    <footer className="bg-neutral-dark text-white pt-12 pb-6">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          {/* Company Info */}
           <div>
-            <h3 className="font-playfair font-bold text-2xl text-primary mb-6">FlexIndi Hair</h3>
-            <p className="mb-6">Premium quality hair extensions and hair care products for the modern woman.</p>
+            <h3 className="text-xl font-heading font-bold mb-4">FlexIndiHair</h3>
+            <p className="text-gray-400 mb-4">Premium hair care products made with natural ingredients for all hair types.</p>
             <div className="flex space-x-4">
-              <a href="#" className="hover:text-primary transition">
-                <FaFacebookF />
+              <a href="#" className="text-gray-400 hover:text-white transition">
+                <Facebook size={16} />
               </a>
-              <a href="#" className="hover:text-primary transition">
-                <FaInstagram />
+              <a href="#" className="text-gray-400 hover:text-white transition">
+                <Instagram size={16} />
               </a>
-              <a href="#" className="hover:text-primary transition">
-                <FaTiktok />
+              <a href="#" className="text-gray-400 hover:text-white transition">
+                <Twitter size={16} />
               </a>
-              <a href="#" className="hover:text-primary transition">
-                <FaPinterestP />
-              </a>
-              <a href="#" className="hover:text-primary transition">
-                <FaYoutube />
+              <a href="#" className="text-gray-400 hover:text-white transition">
+                <i className="fab fa-pinterest-p"></i>
               </a>
             </div>
           </div>
           
+          {/* Shop */}
           <div>
-            <h4 className="font-medium text-lg mb-6">Quick Links</h4>
-            <ul className="space-y-3">
-              <li><Link href="/about" className="hover:text-primary transition">About Us</Link></li>
-              <li><Link href="/contact" className="hover:text-primary transition">Contact Us</Link></li>
-              <li><Link href="#" className="hover:text-primary transition">FAQs</Link></li>
-              <li><Link href="#" className="hover:text-primary transition">Shipping & Returns</Link></li>
-              <li><Link href="#" className="hover:text-primary transition">Privacy Policy</Link></li>
-              <li><Link href="#" className="hover:text-primary transition">Terms & Conditions</Link></li>
+            <h4 className="text-lg font-semibold mb-4">Shop</h4>
+            <ul className="space-y-2">
+              <li><Link href="/shop" className="text-gray-400 hover:text-white transition">All Products</Link></li>
+              <li><Link href="/shop?category=shampoo" className="text-gray-400 hover:text-white transition">Shampoo</Link></li>
+              <li><Link href="/shop?category=conditioner" className="text-gray-400 hover:text-white transition">Conditioner</Link></li>
+              <li><Link href="/shop?category=hair-oils" className="text-gray-400 hover:text-white transition">Hair Oils</Link></li>
+              <li><Link href="/shop?category=treatments" className="text-gray-400 hover:text-white transition">Treatments</Link></li>
+              <li><Link href="/shop?category=gift-sets" className="text-gray-400 hover:text-white transition">Gift Sets</Link></li>
             </ul>
           </div>
           
+          {/* Help */}
           <div>
-            <h4 className="font-medium text-lg mb-6">Categories</h4>
-            <ul className="space-y-3">
-              <li><Link href="/products?category=clip-in-extensions" className="hover:text-primary transition">Clip-In Extensions</Link></li>
-              <li><Link href="/products?category=tape-in-extensions" className="hover:text-primary transition">Tape-In Extensions</Link></li>
-              <li><Link href="/products?category=halo-extensions" className="hover:text-primary transition">Halo Extensions</Link></li>
-              <li><Link href="/products?category=hair-care" className="hover:text-primary transition">Hair Care</Link></li>
-              <li><Link href="/products?category=accessories" className="hover:text-primary transition">Accessories</Link></li>
-              <li><Link href="/products?isNew=true" className="hover:text-primary transition">New Arrivals</Link></li>
+            <h4 className="text-lg font-semibold mb-4">Help</h4>
+            <ul className="space-y-2">
+              <li><Link href="/customer-service" className="text-gray-400 hover:text-white transition">Customer Service</Link></li>
+              <li><Link href="/account" className="text-gray-400 hover:text-white transition">My Account</Link></li>
+              <li><Link href="/order-tracking" className="text-gray-400 hover:text-white transition">Find My Order</Link></li>
+              <li><Link href="/shipping-policy" className="text-gray-400 hover:text-white transition">Shipping Policy</Link></li>
+              <li><Link href="/returns" className="text-gray-400 hover:text-white transition">Returns & Exchanges</Link></li>
+              <li><Link href="/faq" className="text-gray-400 hover:text-white transition">FAQ</Link></li>
             </ul>
           </div>
           
+          {/* About */}
           <div>
-            <h4 className="font-medium text-lg mb-6">Contact Us</h4>
-            <ul className="space-y-3">
-              <li className="flex items-start">
-                <MapPin className="mt-1 mr-3 flex-shrink-0" />
-                <span>123 Hair Extension Blvd, Suite 100<br/>Los Angeles, CA 90001</span>
-              </li>
-              <li className="flex items-center">
-                <Phone className="mr-3 flex-shrink-0" />
-                <span>+1 (234) 567-890</span>
-              </li>
-              <li className="flex items-center">
-                <Mail className="mr-3 flex-shrink-0" />
-                <span>info@flexindihair.com</span>
-              </li>
-              <li className="flex items-center">
-                <Clock className="mr-3 flex-shrink-0" />
-                <span>Mon-Fri: 9am - 5pm PST</span>
-              </li>
+            <h4 className="text-lg font-semibold mb-4">About</h4>
+            <ul className="space-y-2">
+              <li><Link href="/about" className="text-gray-400 hover:text-white transition">Our Story</Link></li>
+              <li><Link href="/ingredients" className="text-gray-400 hover:text-white transition">Ingredients</Link></li>
+              <li><Link href="/sustainability" className="text-gray-400 hover:text-white transition">Sustainability</Link></li>
+              <li><Link href="/blog" className="text-gray-400 hover:text-white transition">Blog</Link></li>
+              <li><Link href="/press" className="text-gray-400 hover:text-white transition">Press</Link></li>
+              <li><Link href="/contact" className="text-gray-400 hover:text-white transition">Contact Us</Link></li>
             </ul>
           </div>
         </div>
         
-        <div className="pt-8 border-t border-gray-700 flex flex-col md:flex-row justify-between items-center">
-          <p className="mb-4 md:mb-0">&copy; {new Date().getFullYear()} FlexIndi Hair. All rights reserved.</p>
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-6 bg-white rounded flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" className="h-4 w-4">
-                <path d="M470.1 231.3s7.6 37.2 9.3 45H446c3.3-8.9 16-43.5 16-43.5-.2.3 3.3-9.1 5.3-14.9l2.8 13.4zM576 80v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48h480c26.5 0 48 21.5 48 48zM152.5 331.2L215.7 176h-42.5l-39.3 106-4.3-21.5-14-71.4c-2.3-9.9-9.1-12.7-18.2-13.1H32.7l-.7 3.1c15.8 4 29.9 9.8 42.2 17.1l35.8 135h42.5zm94.4.2L272.1 176h-40.2l-25.1 155.4h40.1zm139.9-50.8c.2-17.7-10.6-31.2-33.7-42.3-14.1-7.1-22.7-11.9-22.7-19.2.2-6.6 7.3-13.4 23.1-13.4 13.1-.3 22.7 2.8 29.9 5.9l3.6 1.7 5.5-33.6c-7.9-3.1-20.5-6.6-36-6.6-39.7 0-67.6 21.2-67.8 51.4-.3 22.3 20 34.7 35.2 42.2 15.5 7.6 20.8 12.6 20.8 19.3-.2 10.4-12.6 15.2-24.1 15.2-16 0-24.6-2.5-37.7-8.3l-5.3-2.5-5.6 34.9c9.4 4.3 26.8 8.1 44.8 8.3 42.2.1 69.7-20.8 70-53zM528 331.4L495.6 176h-31.1c-9.6 0-16.9 2.8-21 12.9l-59.7 142.5H426s6.9-19.2 8.4-23.3H486c1.2 5.5 4.8 23.3 4.8 23.3H528z" />
-              </svg>
-            </div>
-            <div className="w-10 h-6 bg-white rounded flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" className="h-4 w-4">
-                <path d="M482.9 410.3c0 6.8-4.6 11.7-11.2 11.7-6.8 0-11.2-5.2-11.2-11.7 0-6.5 4.4-11.7 11.2-11.7 6.6 0 11.2 5.2 11.2 11.7zm-310.8-11.7c-7.1 0-11.2 5.2-11.2 11.7 0 6.5 4.1 11.7 11.2 11.7 6.5 0 10.9-4.9 10.9-11.7-.1-6.5-4.4-11.7-10.9-11.7zm117.5-.3c-5.4 0-8.7 3.5-9.5 8.7h19.1c-.9-5.7-4.4-8.7-9.6-8.7zm107.8.3c-6.8 0-10.9 5.2-10.9 11.7 0 6.5 4.1 11.7 10.9 11.7 6.8 0 11.2-4.9 11.2-11.7 0-6.5-4.4-11.7-11.2-11.7zm105.9 26.1c0 .3.3.5.3.8 0 .3-.3.5-.3.8-1.6 1.6-4.1 3.3-8.2 3.3-6.2 0-10.1-4.9-10.1-10.9 0-6 3.8-11.2 10.1-11.2 4.1 0 6.3 1.6 8.2 3.3 0 .3.3.5.3.8 0 .3-.3.5-.3.8l-5.7 3.3c-.8-.9-1.9-1.6-3-1.6-2.2 0-4.1 1.9-4.1 4.6 0 2.8 1.9 4.6 4.1 4.6 1.1 0 2.2-.5 3-1.4l5.7 2.8zm-291.4-26.1c-6.8 0-10.9 5.2-10.9 11.7 0 6.5 4.1 11.7 10.9 11.7 6.8 0 11.2-4.9 11.2-11.7 0-6.5-4.4-11.7-11.2-11.7zm-28.2 0c-6.8 0-10.9 5.2-10.9 11.7 0 6.5 4.1 11.7 10.9 11.7 6.8 0 11.2-4.9 11.2-11.7 0-6.5-4.4-11.7-11.2-11.7zm-59.6 0c-6.5 0-10.4 4.9-10.4 11.7 0 7.1 4.4 11.7 10.6 11.7 5.7 0 9.2-3.8 9.9-8.7h-6.3c-.3 1.9-1.9 3.3-3.8 3.3-2.2 0-3.8-1.6-4.1-4.1h15.5c.3-9.3-5.2-13.9-11.4-13.9zm-31.6 10.1c0-6.8-4.6-11.7-10.9-11.7-6.5 0-10.9 5.2-10.9 11.7 0 6.8 4.4 11.7 10.9 11.7 2.8 0 5.4-1.1 7.3-3.3l-4.4-3.5c-.9.9-1.9 1.1-2.8 1.1-2.2 0-3.8-1.6-4.1-4.1h14.9v-1.9zm-110.9 0c0-6.8-4.6-11.7-10.9-11.7-6.5 0-10.9 5.2-10.9 11.7 0 6.8 4.4 11.7 10.9 11.7 2.8 0 5.4-1.1 7.3-3.3l-4.4-3.5c-.9.9-1.9 1.1-2.8 1.1-2.2 0-3.8-1.6-4.1-4.1h14.9v-1.9zm229.2-10.1c0-6-3.3-10.1-9.8-10.1-5.7 0-8.9 3.3-9.8 8.2h5.7c.3-2.4 1.9-3.8 4.1-3.8 2.2 0 3.8 1.1 3.8 3.8 0 .5 0 1.1-.3 1.9-3.5 0-12 1.1-12 8.2 0 4.6 3.3 7.1 7.3 7.1 3 0 4.9-1.4 6-3.3h.3c0 .8.3 1.6.3 2.2h5.4c-.3-1.1-.3-2.7-.3-4.1v-10.1h.6zm-112.5 0c0-6-3.3-10.1-9.8-10.1-5.7 0-8.9 3.3-9.8 8.2h5.7c.3-2.4 1.9-3.8 4.1-3.8 2.2 0 3.8 1.1 3.8 3.8 0 .5 0 1.1-.3 1.9-3.5 0-12 1.1-12 8.2 0 4.6 3.3 7.1 7.3 7.1 3 0 4.9-1.4 6-3.3h.3c0 .8.3 1.6.3 2.2h5.4c-.3-1.1-.3-2.7-.3-4.1v-10.1h.6zm-30.2-10.1c-4.9 0-7.9 2.2-9.2 4.4h-.3V387H239v35h5.7v-3.3h.3c1.4 2.2 4.4 4.4 9.3 4.4 7.1 0 12.3-5.7 12.3-13.9-.1-8.1-5.2-13.8-12.3-13.8zm-106.9 0c-4.9 0-7.9 2.2-9.2 4.4h-.3V387h-5.7v35h5.7v-3.3h.3c1.4 2.2 4.4 4.4 9.3 4.4 7.1 0 12.3-5.7 12.3-13.9 0-8.1-5.2-13.8-12.4-13.8zm-53.2 0c-7.9 0-13.3 6.3-13.3 13.9 0 7.6 5.5 13.9 13.3 13.9 7.9 0 13.3-6.3 13.3-13.9.1-7.6-5.4-13.9-13.3-13.9zm-32.4 0c-8.2 0-13.3 6-13.3 13.9 0 7.9 5.2 13.9 13.3 13.9 8.2 0 13.3-6 13.3-13.9 0-7.9-5.1-13.9-13.3-13.9zm492.5-9.2H537v35h9.3V406h5.7c7.3 0 12.9-4.6 12.9-13.1 0-8.6-5.5-13.1-12.9-13.1zm-40.7 9.2c-7.9 0-13.7 6-13.7 13.9 0 7.9 5.7 13.9 13.7 13.9 7.9 0 13.7-6 13.7-13.9 0-7.9-5.7-13.9-13.7-13.9zm-17.4-9.2h-9.3v35h9.3v-35zm-107.9 9.2c-7.9 0-13.3 6.3-13.3 13.9 0 7.6 5.5 13.9 13.3 13.9 7.9 0 13.3-6.3 13.3-13.9 0-7.6-5.4-13.9-13.3-13.9zm-52.6 0c-4.9 0-7.9 2.2-9.2 4.4h-.3v-3.3h-5.7v25.3h5.7v-14.1c0-3.8 2.4-6.5 5.7-6.5 3.8 0 4.4 2.4 4.4 5.7v14.9h5.7v-16c0-6-3.3-10.4-9.3-10.4zm-58.3 0c-8.2 0-13.3 6-13.3 13.9 0 7.9 5.2 13.9 13.3 13.9 8.2 0 13.3-6 13.3-13.9 0-7.9-5.1-13.9-13.3-13.9zm-151.7 0c-7.9 0-13.3 6.3-13.3 13.9 0 7.6 5.5 13.9 13.3 13.9 7.9 0 13.3-6.3 13.3-13.9 0-7.6-5.4-13.9-13.3-13.9zm-31 10.1c0-6.8-4.6-11.7-10.9-11.7-6.5 0-10.9 5.2-10.9 11.7 0 6.8 4.4 11.7 10.9 11.7 2.8 0 5.4-1.1 7.3-3.3l-4.4-3.5c-.9.9-1.9 1.1-2.8 1.1-2.2 0-3.8-1.6-4.1-4.1H132v-1.9zm95.8-10.1c-6.5 0-10.4 4.9-10.4 11.7 0 7.1 4.4 11.7 10.6 11.7 5.7 0 9.2-3.8 9.9-8.7h-6.3c-.3 1.9-1.9 3.3-3.8 3.3-2.2 0-3.8-1.6-4.1-4.1h15.5c.4-9.3-5.1-13.9-11.4-13.9zm-32.2 0c-3.5 0-6.8 1.4-8.7 4.6h-.3v-3.5h-5.7v25.3h5.7v-14.3c0-3.8 2.2-6.3 5.7-6.3 3 0 4.9 1.6 4.9 6v14.6h5.7v-11.4c0-3.5 2.4-6 5.7-6 3 0 4.9 1.6 4.9 5.7v11.6h5.7v-12.7c0-7.3-3.5-10.1-8.7-10.1-3.8 0-6.5 1.9-8.4 4.9-1.6-3-4-4.4-6.5-4.4zm126.5 0c-5.7 0-9.5 1.9-10.9 6.8l5.7 1.6c.5-1.9 2.2-3.5 5.2-3.5 3 0 4.4 1.1 4.4 3 0 1.4-.5 2.2-2.2 2.4-4.9.8-11.7 1.6-11.7 8.4 0 4.1 3.5 7.1 8.2 7.1 3.3 0 6.3-1.4 7.9-3.8h.3c.3 1.1.5 2.2.8 2.7h6c-.8-1.1-.8-2.7-.8-4.1v-9c0-6-4.4-8.7-12.9-8.7v.1zm-46.3 0c-5.4 0-8.9 1.1-11.4 2.4l2.2 4.9c1.9-1.1 4.4-1.9 7.1-1.9 3 0 4.6 1.1 4.6 3v.3c-1.1-.3-2.7-.5-4.4-.5-5.2 0-10.6 2.7-10.6 8.2 0 5.2 4.1 7.6 8.2 7.6 3.3 0 5.7-1.1 7.1-3h.3v2.2h5.7v-14.6c-.2-4.9-4-8.6-8.8-8.6zm-97.1.3h-9.8v-8.4h-5.7v8.4h-5.4v5.2h5.4v11.9c0 5.7 2.2 9.2 8.9 9.2 2.4 0 4.9-.5 6.5-1.4l-1.4-4.9c-1.1.5-2.4.8-3.8.8-2.2 0-3.5-1.1-3.5-4.1v-11.4h9.8v-5.3zm237.4-28.7v64h27.2c12.2 0 22.3-5.9 22.3-18.9 0-7.5-3.3-12.5-10.1-15.7 4.9-3.5 7.7-8.2 7.7-14.3 0-12.1-7.7-15.1-18.5-15.1H361zm9.3 56.5v-20.3h11.4c7.5 0 12.9 3.3 12.9 10.4 0 7.3-5.4 9.9-12.9 9.9h-11.4zm0-26.7v-22.7h10.9c6.8 0 10.3 3.3 10.3 10.9 0 7.7-5.2 11.7-11.9 11.7h-9.3v.1zm-112.2 10c0-19.5-13.8-33.4-30.9-33.4-16.8 0-30.5 13.4-30.5 33.2 0 20.1 13.3 33.4 32.2 33.4 10.9 0 19.5-3.3 25.6-10.9l-5.9-5.9c-5.2 5.4-11.4 7.8-19.1 7.8-10.9 0-21-7.8-21.2-22.7H258c.1-.8.1-1.6.1-2.5zm-42.8-3.8c1.3-10.9 8.9-19.9 19.6-19.9 10.9 0 18.5 8.4 19.3 19.9h-38.9zm10.9-40.5l-4.9-7.5-32.5 19.9 3.3 5.4 34.1-17.8zm97.8 40.5c0-19.5-13.8-33.4-30.9-33.4-16.8 0-30.5 13.4-30.5 33.2 0 20.1 13.3 33.4 32.2 33.4 10.9 0 19.5-3.3 25.6-10.9l-5.9-5.9c-5.2 5.4-11.4 7.8-19.1 7.8-10.9 0-21-7.8-21.2-22.7h49.8c0-.8.1-1.6.1-2.5h-.1zm-42.9-3.8c1.3-10.9 8.9-19.9 19.6-19.9 10.9 0 18.5 8.4 19.3 19.9h-38.9zm30.8-36.7l-4.9-7.5-32.5 19.9 3.3 5.4 34.1-17.8zm-50 0l-4.9-7.5-32.5 19.9 3.3 5.4 34.1-17.8zm-50 0l-4.9-7.5-32.5 19.9 3.3 5.4 34.1-17.8z"/>
-              </svg>
-            </div>
-            <div className="w-10 h-6 bg-white rounded flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" className="h-4 w-4">
-                <path d="M186.3 258.2c0 12.2-9.7 21.5-22 21.5-9.2 0-16-5.2-16-15 0-12.2 9.5-22 21.7-22 9.3 0 16.3 5.7 16.3 15.5zM80.5 209.7h-4.7c-1.5 0-3 1-3.2 2.7l-4.3 26.7 8.2-.3c11 0 19.5-1.5 21.5-14.2 2.3-13.4-6.2-14.9-17.5-14.9zm284 0H360c-1.8 0-3 1-3.2 2.7l-4.2 26.7 8-.3c13 0 22-3 22-18-.1-10.6-9.6-11.1-18.1-11.1zM576 80v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48h480c26.5 0 48 21.5 48 48zM128.3 215.4c0-21-16.2-28-34.7-28h-40c-2.5 0-5 2-5.2 4.7L32 294.2c-.3 2 1.2 4 3.2 4h19c2.7 0 5.2-2.9 5.5-5.7l4.5-26.6c1-7.2 13.2-4.7 18-4.7 28.6 0 46.1-17 46.1-45.8zm84.2 8.8h-19c-3.8 0-4 5.5-4.2 8.2-5.8-8.5-14.2-10-23.7-10-24.5 0-43.2 21.5-43.2 45.2 0 19.5 12.2 32.2 31.7 32.2 9 0 20.2-4.9 26.5-11.9-.5 1.5-1 4.7-1 6.2 0 2.3 1 4 3.2 4H200c2.7 0 5-2.9 5.5-5.7l10.2-64.3c.3-1.9-1.2-3.9-3.2-3.9zm40.5 97.9l63.7-92.6c.5-.5.5-1 .5-1.7 0-1.7-1.5-3.5-3.2-3.5h-19.2c-1.7 0-3.5 1-4.5 2.5l-26.5 39-11-37.5c-.8-2.2-3-4-5.5-4h-18.5c-1.5 0-3 1.2-3.2 2.7l-16 107.5c-.2 1.5 1 3.5 3.2 3.5h19.7c2.7 0 5.2-2.9 5.5-5.7l8.2-51.8 18.9 56.2c1 2.2 3 3.7 5.2 3.7h22c1.6 0 3.3-1.1 4.2-2.5zm160.3-55.9c0-33-25.4-45.8-53.2-45.8h-35c-3 0-5.2 2-5.5 4.7l-16.2 104c-.2 2 1.3 4 3.2 4h19.2c2.8 0 5.2-2.9 5.5-5.7l4.5-29.8c3-4.9 15.4-2.8 20.8-3.3 25.6-3 56.7-15.4 56.7-44.1zm82.8-111.3c-2.5-6-7.7-9.7-14.2-9.7h-44.5c-6.5 0-11.7 3.7-14.2 9.7-2.5 6.2-15.8 42.5-15.8 42.5-1.5 4.2.5 8.5 4.7 9.7 4.2 1.5 8.5-.5 9.7-4.7l12.5-33.5h43.2l12.5 33.5c1.2 4.2 5.5 6.2 9.7 4.7 4.2-1.2 6.2-5.5 4.7-9.7-.2 0-8.3-22.5-8.3-22.5zm-57-7.2h27L406 137.7l-11.2-29.8z"/>
-              </svg>
-            </div>
-            <div className="w-10 h-6 bg-white rounded flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" className="h-4 w-4">
-                <path d="M528.9 171.9c-146.6-2.2-225.8-4.8-291.9-28.2-35.4-12.4-80.7-27.4-97-35.9-1-.5-1.7-.7-2.7-.7-4.9 0-9.6 3.2-10.6 8.2l-8.3 37.6c-1.4 6.3 2.8 12.4 9.4 13.5 3.4.5 56.6 8.3 75.8 11.4 7.5 1.2 11.1 9.1 6.8 15.2-4.6 6.8-14.2 14.8-16.1 18.7-4.2 9-3.6 17.2 1.7 21.7 5.4 4.5 14.2 3.4 22.3-3.1 8.7-7 16.1-21.4 17.3-28 1.1-5.5 3.9-6.3 5.1-6.3 1.9 0 3.2.9 3.9 4.6 1.7 10.1 8.5 35.9 10.8 45.1 1.1 4.4 3.5 8.3 6.8 11 3.9 3.2 8.6 5 13.3 5 3.4 0 7-.9 10.1-2.4 10.4-5 21.4-7.7 32.5-7.6 11 .1 22.1 2.8 32.3 7.5 5.9 2.8 12.8 3.2 19.1.9 6.5-2.4 11.8-7.4 14.6-14 3.9-11.5 9.7-37.1 13.5-51.7 1.3-5.3 6-8.4 10.5-8.4 3.6 0 6.9 2 8.6 5.2 11.5 22.7 20.9 32.7 64.4 65.4 13.4 10.1 27.2 13 39.1 8.6 12-4.5 20.6-16.1 21.6-29.5 3.4-42.7-3.5-145.1-4.1-155.7-.3-5.2-2.4-10.2-5.9-14.1-3.6-4-8.5-6.6-13.8-7.3-48.5-6.4-98.4 6.3-123.7 30.9-4 3.9-4 3.9-7.8 6.5-10.7-9.9-14.2-12.4-54.3-41.3-40.9-29.5-81.4-53-138.2-52-1.8 0-3.5.1-5.3.2-66.8 6-85.8 61.8-87.8 77.7-2.8 22-1.7 39.2.9 51.6-21 33.3-30.7 70.8-27.7 107.5 2.9 36.9 18.7 69.1 44.5 90.7 19.7 16.6 44.4 25.2 69.8 24.2 58.3-2.3 105.4-58.2 107-59.9 5.6-5.8 5.4-15.1-.6-20.7-6-5.5-15.3-5.2-20.8.7-31.5 33.9-75.8 49.7-112.8 40.3-26.2-6.7-47.9-25.9-61.3-54.3-24.5-52 .4-112.1 1.8-116 3.7-10.8-.9-22.6-11.3-28.2-10.3-5.3-22.8-1.7-28.7 8.3C65.3 228.1 55.8 262 56 292.9c.1 18.7 3.9 34.6 8.5 45.1-3.8 4.8-32 48.9-37.4 93.9-6.4 53.3 21.1 107.6 72 128.1 38.5 15.5 83.5 14.3 131.9-3.8 51.5-19.1 97.6-53.6 130.3-96.9 70.3-20.6 135.2-63.5 168.3-96.3 3.4-3.3 8.8-.3 8.9 4.5.1 3.5.2 7.2.3 11-2 52.3-9.8 121-15.2 146.8-3.3 15.6-17.1 26.1-32.3 26.1-13.6 0-26.9-9.6-29.8-23.4-8.8-41.5-55.8-79.8-86.8-99-7.2-4.5-16.6-2.3-21 4.9-4.8 7.7-2.4 17.8 5.3 22.5 16 9.8 52.5 41 60.3 77.9 5.5 25.8 26.4 46.2 52.6 46.2 30.4 0 55.2-21.9 61.2-50.6 5.7-27.1 13.5-97.5 15.4-150 .3-8.4.2-19.8.1-23.7 11.9-11.2 62.4-62.3 74.1-96 17.9-51.2-40.7-68.9-67.2-75.3zm-205.6 31c16.8-19.7 41.4-26.8 59.3-26.8 5.1 0 11.3.8 15.8 4.9 8.2 7.2 6.1 20.1-1.9 26.6-23.9 19.4-53.3 13.1-73.2-4.7z"/>
-              </svg>
+        {/* Bottom Footer */}
+        <div className="pt-8 border-t border-gray-700 text-sm text-gray-400">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p>&copy; {new Date().getFullYear()} FlexIndiHair. All rights reserved.</p>
+            <div className="flex space-x-4 mt-4 md:mt-0">
+              <Link href="/privacy-policy" className="hover:text-white transition">Privacy Policy</Link>
+              <Link href="/terms" className="hover:text-white transition">Terms of Service</Link>
+              <Link href="/accessibility" className="hover:text-white transition">Accessibility</Link>
             </div>
           </div>
         </div>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

@@ -1,99 +1,97 @@
-import { Star } from "lucide-react";
+import { useQuery } from '@tanstack/react-query';
+import StarRating from '@/components/icons/StarRating';
 
-// Testimonial data
-const testimonials = [
-  {
-    id: 1,
-    content: "I've tried many hair extensions brands, but FlexIndi Hair is by far the best quality I've found. The hair is thick all the way to the ends and blends perfectly with my natural hair. Highly recommend!",
-    rating: 5,
-    name: "Sarah Johnson",
-    location: "New York, NY",
-    image: "https://randomuser.me/api/portraits/women/12.jpg"
-  },
-  {
-    id: 2,
-    content: "The customer service is outstanding! I had questions about which shade would match my hair, and they were so helpful in guiding me. The extensions arrived quickly and look amazing. Will be a repeat customer for sure.",
-    rating: 5,
-    name: "Emma Wilson",
-    location: "Los Angeles, CA",
-    image: "https://randomuser.me/api/portraits/women/44.jpg"
-  },
-  {
-    id: 3,
-    content: "As a professional stylist, I'm very particular about the products I use and recommend. FlexIndi Hair extensions exceed my expectations. They're durable, tangle-free, and my clients always love the results!",
-    rating: 4.5,
-    name: "Jessica Martinez",
-    location: "Miami, FL",
-    image: "https://randomuser.me/api/portraits/women/68.jpg"
-  }
-];
+const Testimonials = () => {
+  const { data: testimonials, isLoading } = useQuery({
+    queryKey: ['/api/testimonials'],
+  });
 
-export default function Testimonials() {
-  // Helper function to render stars based on rating
-  const renderStars = (rating: number) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-    
-    // Add full stars
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(
-        <Star key={`full-${i}`} className="fill-current text-yellow-400" />
-      );
+  // Fallback to hardcoded testimonials if API data is not available
+  const displayTestimonials = testimonials || [
+    {
+      id: 1,
+      name: "Sarah Johnson",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&h=80&q=80",
+      rating: 5,
+      text: "I've been using the Hydrating Shampoo and Repair Conditioner for 3 months now, and my hair has never felt better. Finally found products that actually work for my dry hair!",
+      productName: "Hydrating Shampoo & Repair Conditioner"
+    },
+    {
+      id: 2,
+      name: "Michael Chen",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&h=80&q=80",
+      rating: 4.5,
+      text: "The Nourishing Hair Oil is a game changer! My frizz is gone and my hair feels so soft. A little goes a long way, so the bottle lasts forever. Highly recommend!",
+      productName: "Nourishing Hair Oil"
+    },
+    {
+      id: 3,
+      name: "Emily Rodriguez",
+      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&h=80&q=80",
+      rating: 5,
+      text: "After trying countless products for my curly hair, I finally found the Hair Mask Treatment. It defines my curls without weighing them down. Plus, it smells amazing!",
+      productName: "Hair Mask Treatment"
     }
-    
-    // Add half star if needed
-    if (hasHalfStar) {
-      stars.push(
-        <div key="half" className="relative">
-          <Star className="text-gray-300" />
-          <div className="absolute inset-0 overflow-hidden w-1/2">
-            <Star className="fill-current text-yellow-400" />
-          </div>
-        </div>
-      );
-    }
-    
-    // Add empty stars
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    for (let i = 0; i < emptyStars; i++) {
-      stars.push(
-        <Star key={`empty-${i}`} className="text-gray-300" />
-      );
-    }
-    
-    return stars;
-  };
-  
+  ];
+
   return (
-    <section className="py-16">
+    <section className="py-12 bg-neutral-light">
       <div className="container mx-auto px-4">
-        <h2 className="font-playfair font-bold text-3xl md:text-4xl text-center mb-12">Our Customers Love Us</h2>
+        <h2 className="text-3xl font-heading font-bold text-center mb-2">Customer Love</h2>
+        <p className="text-center text-gray-600 mb-8">See what our customers are saying about our products</p>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="flex text-yellow-400 mb-4">
-                {renderStars(testimonial.rating)}
-              </div>
-              <p className="italic mb-6">{testimonial.content}</p>
-              <div className="flex items-center">
-                <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
-                  <img 
-                    src={testimonial.image} 
-                    alt={`${testimonial.name} profile`} 
-                    className="w-full h-full object-cover"
-                  />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {isLoading ? (
+            // Loading skeleton
+            Array(3).fill(0).map((_, index) => (
+              <div key={index} className="animate-pulse bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+                    <div className="ml-3">
+                      <div className="h-4 bg-gray-200 rounded w-24 mb-2"></div>
+                      <div className="h-3 bg-gray-200 rounded w-32"></div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-medium">{testimonial.name}</h4>
-                  <p className="text-sm text-gray-500">{testimonial.location}</p>
-                </div>
+                <div className="h-3 bg-gray-200 rounded w-24 mb-4"></div>
+                <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-3"></div>
+                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            displayTestimonials.map((testimonial) => (
+              <div key={testimonial.id} className="bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center">
+                    <img 
+                      src={testimonial.avatar} 
+                      alt={testimonial.name} 
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div className="ml-3">
+                      <h4 className="font-medium">{testimonial.name}</h4>
+                      <p className="text-sm text-gray-500">Verified Customer</p>
+                    </div>
+                  </div>
+                  <div className="text-secondary">
+                    <i className="fas fa-quote-right text-xl"></i>
+                  </div>
+                </div>
+                <div className="mb-4">
+                  <StarRating rating={testimonial.rating} size="sm" />
+                </div>
+                <p className="text-gray-600 mb-3">"{testimonial.text}"</p>
+                <p className="text-sm text-gray-500">{testimonial.productName}</p>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </section>
   );
-}
+};
+
+export default Testimonials;

@@ -1,63 +1,61 @@
-import { FaInstagram } from "react-icons/fa";
+import { Instagram } from 'lucide-react';
 
-// Mock Instagram feed data
-const instagramPosts = [
-  {
-    id: 1,
-    image: "https://images.unsplash.com/photo-1646893807752-9f73e31dde13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzF8fGhhaXIlMjBzYWxvbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
-    link: "https://www.instagram.com/p/example1/"
-  },
-  {
-    id: 2,
-    image: "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aGFpciUyMHNhbG9ufGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
-    link: "https://www.instagram.com/p/example2/"
-  },
-  {
-    id: 3,
-    image: "https://images.unsplash.com/photo-1633681926037-3b5336be3cfd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGhhaXIlMjBjYXJlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
-    link: "https://www.instagram.com/p/example3/"
-  },
-  {
-    id: 4,
-    image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aGFpciUyMHNhbG9ufGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
-    link: "https://www.instagram.com/p/example4/"
-  },
-  {
-    id: 5,
-    image: "https://images.unsplash.com/photo-1620331688629-a191b3989748?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGhhaXIlMjBwcm9kdWN0c3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
-    link: "https://www.instagram.com/p/example5/"
-  },
-  {
-    id: 6,
-    image: "https://images.unsplash.com/photo-1526947425960-945c6e72858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGhhaXIlMjBwcm9kdWN0c3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
-    link: "https://www.instagram.com/p/example6/"
-  }
-];
+const InstagramFeed = () => {
+  const instagramPosts = [
+    {
+      id: 1,
+      image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80",
+      link: "#"
+    },
+    {
+      id: 2,
+      image: "https://images.unsplash.com/photo-1586473219010-2ffc57b0d282?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80",
+      link: "#"
+    },
+    {
+      id: 3,
+      image: "https://images.unsplash.com/photo-1562864758-143c0cc8b5a4?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80",
+      link: "#"
+    },
+    {
+      id: 4,
+      image: "https://images.unsplash.com/photo-1588212716027-495a8cbedb70?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80",
+      link: "#"
+    },
+    {
+      id: 5,
+      image: "https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80",
+      link: "#"
+    },
+    {
+      id: 6,
+      image: "https://images.unsplash.com/photo-1580618864180-f6d7d39b8ff6?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80",
+      link: "#"
+    }
+  ];
 
-export default function InstagramFeed() {
   return (
-    <section className="py-16 bg-accent">
+    <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="font-playfair font-bold text-3xl md:text-4xl text-center mb-6">Follow Us On Instagram</h2>
-        <p className="text-center text-lg mb-12">@flexindihair</p>
+        <h2 className="text-3xl font-heading font-bold text-center mb-2">Follow Us On Instagram</h2>
+        <p className="text-center text-gray-600 mb-8">@flexindihair</p>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
           {instagramPosts.map((post) => (
             <a 
-              key={post.id}
-              href={post.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative group overflow-hidden"
+              key={post.id} 
+              href={post.link} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="block overflow-hidden group relative"
             >
-              <div 
-                className="aspect-square bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                style={{ backgroundImage: `url(${post.image})` }}
-              ></div>
-              <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <div className="text-white">
-                  <FaInstagram className="text-xl" />
-                </div>
+              <img 
+                src={post.image} 
+                alt="Instagram Post" 
+                className="w-full h-40 md:h-48 object-cover group-hover:scale-110 transition duration-300"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                <Instagram className="text-white w-6 h-6" />
               </div>
             </a>
           ))}
@@ -65,4 +63,6 @@ export default function InstagramFeed() {
       </div>
     </section>
   );
-}
+};
+
+export default InstagramFeed;
