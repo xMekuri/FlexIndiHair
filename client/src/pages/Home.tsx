@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet";
 import HeroSlider from "@/components/Home/HeroSlider";
 import FeaturesBar from "@/components/Home/FeaturesBar";
 import CategoryHighlights from "@/components/Home/CategoryHighlights";
-import Bestsellers from "@/components/Home/BestSellers";
+import BestSellers from "@/components/Home/BestSellers";
 import Testimonials from "@/components/Home/Testimonials";
 import InstagramFeed from "@/components/Home/InstagramFeed";
 import NewsletterSignup from "@/components/Home/NewsletterSignup";
@@ -21,7 +21,7 @@ export default function Home() {
       <HeroSlider />
       <FeaturesBar />
       <CategoryHighlights />
-      <Bestsellers />
+      <BestSellers />
       <Testimonials />
       <InstagramFeed />
       <NewsletterSignup />
