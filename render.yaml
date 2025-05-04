@@ -4,7 +4,7 @@ services:
     env: node
     buildCommand: npm install && npm run db:push && npm run build
     startCommand: npm start
-    plan: starter
+    plan: free
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -15,5 +15,5 @@ services:
 
 databases:
   - name: flexindihair-db
-    plan: starter
+    plan: free
     ipAllowList: [] # only allow internal connections
