@@ -4,7 +4,7 @@ import { Heart, Eye, ShoppingCart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import StarRating from '@/components/icons/StarRating';
-import { useCart } from '@/hooks/CartContext';
+import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
 
 interface Product {
