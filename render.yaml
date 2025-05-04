@@ -12,14 +12,6 @@ services:
           property: connectionString
       - key: NODE_ENV
         value: production
-    envVarsGroups:
-      - name: DB_SECRETS
-        envVars:
-          - key: DB_PASSWORD
-            generateValue: true
-          - key: DB_USER
-            generateValue: true
-    autoDeploy: true
 
 databases:
   - name: flexindihair-db
