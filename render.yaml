@@ -16,4 +16,4 @@ services:
 databases:
   - name: flexindihair-db
     plan: free
-    ipAllowList: [] # only allow internal connections
+    ipAllowList: []
