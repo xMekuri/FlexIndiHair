@@ -1,4 +1,4 @@
-import { db } from "@db";
+import { db, pool } from "@db";
 import * as schema from "@shared/schema";
 import { eq, and, or, desc, asc, like, gte, lte, isNull, sql, inArray } from "drizzle-orm";
 import { z } from "zod";
