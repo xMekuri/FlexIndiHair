@@ -1,7 +1,7 @@
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import CartItem from '@/components/shop/CartItem';
-import { useCart } from '@/hooks/useCart';
+import { useCart } from '@/hooks/CartContext';
 
 const MiniCart = () => {
   const { items, cartTotal } = useCart();
