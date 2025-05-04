@@ -1,5 +1,5 @@
 import { MinusCircle, PlusCircle, X } from 'lucide-react';
-import { useCart } from '@/hooks/useCart';
+import { useCart } from '@/hooks/CartContext';
 
 interface CartItemProps {
   id: number;
