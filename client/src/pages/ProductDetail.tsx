@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCart } from "@/context/CartContext";
-import Bestsellers from "@/components/Home/Bestsellers";
+import BestSellers from "@/components/Home/BestSellers";
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -360,7 +360,7 @@ export default function ProductDetail() {
         
         {/* Related Products */}
         <div className="mt-16">
-          <Bestsellers title="You May Also Like" />
+          <BestSellers title="You May Also Like" />
         </div>
       </div>
     </>
