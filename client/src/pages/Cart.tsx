@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/context/CartContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent } from "@/components/ui/card";
-import Bestsellers from "@/components/Home/Bestsellers";
+import BestSellers from "@/components/Home/BestSellers";
 
 export default function Cart() {
   const [, navigate] = useLocation();
@@ -222,7 +222,7 @@ export default function Cart() {
             </Button>
             
             <div className="mt-16">
-              <Bestsellers title="You might like these" />
+              <BestSellers title="You might like these" />
             </div>
           </div>
         )}
