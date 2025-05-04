@@ -12,8 +12,18 @@ services:
           property: connectionString
       - key: NODE_ENV
         value: production
+      # Example for adding another environment variable
+      - key: API_KEY
+        value: "your-api-key-here"  # Replace with actual key if needed
 
 databases:
   - name: flexindihair-db
     plan: free
-    ipAllowList: [] # only allow internal connections
+    ipAllowList: []  # Only allow internal connections
+
+# Optional section if you're using any other services
+# You can add additional services like Redis, or other integrations if needed.
+# services:
+#   - type: redis
+#     name: redis-cache
+#     plan: free
