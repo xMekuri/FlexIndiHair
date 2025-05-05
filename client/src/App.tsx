@@ -161,15 +161,15 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <CartProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow">
-              <Router />
-            </main>
-            <Footer />
-          </div>
-          <Toaster />
-        </CartProvider>
+  <div className="flex flex-col min-h-screen">
+    <Header />
+    <main className="flex-grow">
+      <Router />
+    </main>
+    <Footer />
+  </div>
+  <Toaster />
+</CartProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
