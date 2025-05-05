@@ -167,8 +167,8 @@ function App() {
               <Router />
             </main>
             <Footer />
-            <Toaster />
           </div>
+          <Toaster />
         </CartProvider>
       </AuthProvider>
     </QueryClientProvider>
