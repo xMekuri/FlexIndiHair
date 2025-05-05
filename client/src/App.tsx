@@ -41,11 +41,11 @@ import { Loader2 } from "lucide-react";
 const ProtectedAdminRoute = ({ component: Component }: { component: React.ComponentType }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [, setLocation] = useLocation();
-  
+
   useEffect(() => {
     // Check if admin token exists
     const token = localStorage.getItem("admin_token");
-    
+
     if (!token) {
       setIsAuthenticated(false);
       setLocation("/admin/login");
@@ -55,7 +55,7 @@ const ProtectedAdminRoute = ({ component: Component }: { component: React.Compon
       setIsAuthenticated(true);
     }
   }, [setLocation]);
-  
+
   if (isAuthenticated === null) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -63,11 +63,11 @@ const ProtectedAdminRoute = ({ component: Component }: { component: React.Compon
       </div>
     );
   }
-  
+
   if (isAuthenticated === false) {
     return null; // Redirect is handled in useEffect
   }
-  
+
   return (
     <AdminLayout>
       <Component />
@@ -78,13 +78,13 @@ const ProtectedAdminRoute = ({ component: Component }: { component: React.Compon
 const ProtectedCustomerRoute = ({ component: Component }: { component: React.ComponentType }) => {
   const { isCustomerLoggedIn, isAuthenticating } = useAuth();
   const [, setLocation] = useLocation();
-  
+
   useEffect(() => {
     if (!isAuthenticating && !isCustomerLoggedIn) {
       setLocation("/auth");
     }
   }, [isCustomerLoggedIn, isAuthenticating, setLocation]);
-  
+
   if (isAuthenticating) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -92,11 +92,11 @@ const ProtectedCustomerRoute = ({ component: Component }: { component: React.Com
       </div>
     );
   }
-  
+
   if (!isCustomerLoggedIn) {
     return null; // Redirect is handled in useEffect
   }
-  
+
   return <Component />;
 };
 
@@ -112,7 +112,7 @@ function Router() {
       <Route path="/order-confirmation" component={OrderConfirmation} />
       <Route path="/about" component={About} />
       <Route path="/contact" component={Contact} />
-      
+
       {/* Auth Routes */}
       <Route path="/login" component={AuthPage} />
       <Route path="/register" component={AuthPage} />
@@ -121,10 +121,10 @@ function Router() {
         {() => <ProtectedCustomerRoute component={CustomerOrders} />}
       </Route>
       <Route path="/auth" component={AuthPage} />
-      
+
       {/* Admin Routes */}
       <Route path="/admin/login" component={AdminLogin} />
-      
+
       <Route path="/admin">
         {() => <ProtectedAdminRoute component={AdminDashboard} />}
       </Route>
@@ -149,7 +149,7 @@ function Router() {
       <Route path="/admin/customers">
         {() => <ProtectedAdminRoute component={AdminCustomers} />}
       </Route>
-      
+
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
@@ -160,18 +160,16 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        
+        <CartProvider>
           <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow">
-              <CartProvider>
               <Router />
-              </CartProvider>
             </main>
             <Footer />
           </div>
           <Toaster />
-        
+        </CartProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
