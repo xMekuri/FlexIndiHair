@@ -3,7 +3,7 @@ import { Link, useLocation } from 'wouter';
 import { ShoppingBag, User, Heart, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import MiniCart from '@/components/shop/MiniCart';
-import { useCart } from '@/hooks/useCart';
+import { useCart } from '@/context/CartContext';
 
 const Header = () => {
   const [location] = useLocation();
