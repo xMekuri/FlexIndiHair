@@ -160,16 +160,18 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <CartProvider>
+        
           <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow">
+              <CartProvider>
               <Router />
+              </CartProvider>
             </main>
             <Footer />
           </div>
           <Toaster />
-        </CartProvider>
+        
       </AuthProvider>
     </QueryClientProvider>
   );
